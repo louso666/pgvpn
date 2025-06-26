@@ -318,9 +318,9 @@ func (s *Server) forward(req *dns.Msg, upstream string) (*dns.Msg, error) {
 	c := new(dns.Client)
 
 	// Настраиваем агрессивные таймауты для быстрого ответа
-	c.DialTimeout = 2 * time.Second  // быстрое подключение
-	c.ReadTimeout = 3 * time.Second  // быстрое чтение
-	c.WriteTimeout = 2 * time.Second // быстрая запись
+	c.DialTimeout = 10 * time.Second  // быстрое подключение
+	c.ReadTimeout = 10 * time.Second  // быстрое чтение
+	c.WriteTimeout = 10 * time.Second // быстрая запись
 
 	// Сначала пробуем UDP с малым таймаутом
 	c.Net = "udp"
@@ -337,8 +337,8 @@ func (s *Server) forward(req *dns.Msg, upstream string) (*dns.Msg, error) {
 
 		// TCP обычно медленнее, даём больше времени
 		c.Net = "tcp"
-		c.DialTimeout = 3 * time.Second
-		c.ReadTimeout = 5 * time.Second
+		c.DialTimeout = 10 * time.Second
+		c.ReadTimeout = 10 * time.Second
 
 		start = time.Now()
 		m, rtt, err = c.Exchange(req, upstream)

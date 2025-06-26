@@ -757,7 +757,7 @@ func (b *Bot) getFailedConnections() map[string][]string {
 		// Признаки реальной блокировки:
 		// 1. Несколько попыток подключения (больше 1 пакета)
 		// 2. Либо долгий таймаут (больше 60 сек)
-		if f.Forward.Packets < 2 && f.TimeOut < 60 {
+		if f.Forward.Packets < 4 && f.TimeOut < 60 {
 			continue
 		}
 
