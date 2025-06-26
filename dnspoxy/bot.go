@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -123,6 +124,7 @@ func (b *Bot) setupBotCommands() {
 		{Command: "remove_site", Description: "Удалить сайт + очистить ipset"},
 		{Command: "site", Description: "Показать паттерны или IP по доменам"},
 		{Command: "conn", Description: "Показать заблокированные соединения"},
+		{Command: "log", Description: "Показать последние N доменов (обычные)"},
 		{Command: "help", Description: "Показать справку по командам"},
 	}
 
@@ -378,6 +380,63 @@ func (b *Bot) handleConnCommand(message *tgbotapi.Message) {
 	}
 }
 
+func (b *Bot) handleLogCommand(message *tgbotapi.Message) {
+	if !b.isAuthorized(message.Chat.ID) {
+		msg := tgbotapi.NewMessage(message.Chat.ID, "❌ Сначала авторизуйтесь: /pass <пароль>")
+		b.api.Send(msg)
+		return
+	}
+
+	// Значение по умолчанию
+	limit := 10
+
+	args := strings.Fields(message.Text)
+	if len(args) >= 2 {
+		if v, err := strconv.Atoi(args[1]); err == nil && v > 0 {
+			limit = v
+		}
+	}
+
+	// Запрашиваем из базы уникальные домены (не проксируемые)
+	rows, err := b.db.Query(`SELECT domain, MAX(timestamp) AS ts
+		FROM dns_logs
+		WHERE proxied = 0
+		GROUP BY domain
+		ORDER BY ts DESC
+		LIMIT ?`, limit)
+	if err != nil {
+		log.Printf("DB query failed /log: %v", err)
+		msg := tgbotapi.NewMessage(message.Chat.ID, "❌ Ошибка запроса к базе")
+		b.api.Send(msg)
+		return
+	}
+	defer rows.Close()
+
+	var domains []string
+	for rows.Next() {
+		var domain string
+		var ts string
+		if err := rows.Scan(&domain, &ts); err == nil {
+			domains = append(domains, domain)
+		}
+	}
+
+	if len(domains) == 0 {
+		msg := tgbotapi.NewMessage(message.Chat.ID, "📝 Домены не найдены")
+		b.api.Send(msg)
+		return
+	}
+
+	response := fmt.Sprintf("🕒 Последние %d доменов (обычные):\n\n", len(domains))
+	for i, d := range domains {
+		response += fmt.Sprintf("%2d. <code>%s</code>\n", i+1, d)
+	}
+
+	msg := tgbotapi.NewMessage(message.Chat.ID, response)
+	msg.ParseMode = "HTML"
+	b.api.Send(msg)
+}
+
 func (b *Bot) handleHelpCommand(message *tgbotapi.Message) {
 	help := `🤖 DNS Proxy Bot
 
@@ -389,6 +448,7 @@ func (b *Bot) handleHelpCommand(message *tgbotapi.Message) {
 /remove_site <паттерн> - Удалить сайт + очистить ipset
 /site [паттерн] - Показать паттерны или IP по доменам
 /conn - Показать заблокированные соединения (повторные попытки)
+/log [n] - Показать последние N доменов (обычные), по умолчанию 10
 /help - Показать эту справку
 
 📝 Примеры:
@@ -636,7 +696,7 @@ func (b *Bot) getFailedConnections() map[string][]string {
 
 	result := make(map[string][]string)
 	currentTime := time.Now()
-	cutoffTime := currentTime.Add(-20 * time.Minute) // Только за последние 2 минуты
+	cutoffTime := currentTime.Add(-2 * time.Minute) // Только за последние 2 минуты
 
 	// Получаем записи conntrack
 	flows, err := netlink.ConntrackTableList(netlink.ConntrackTable, unix.AF_INET)
@@ -647,6 +707,9 @@ func (b *Bot) getFailedConnections() map[string][]string {
 
 	log.Printf("Получено %d записей conntrack", len(flows))
 
+	// Загружаем паттерны, чтобы отличать проксируемые IP
+	patterns, _ := b.loadPatterns()
+
 	// Загружаем маппинг IP -> домены из нашего JSON файла
 	proxiedIPs := make(map[string]bool)
 	ipToDomain := make(map[string][]string)
@@ -656,8 +719,19 @@ func (b *Bot) getFailedConnections() map[string][]string {
 		if err := json.Unmarshal(data, &domainMap); err == nil {
 			// Создаем маппинг проксируемых IP
 			for domain, ips := range domainMap {
+				// Определяем, является ли домен проксируемым
+				isProxied := false
+				for _, p := range patterns {
+					if strings.Contains(domain, p) {
+						isProxied = true
+						break
+					}
+				}
+
 				for _, ip := range ips {
-					proxiedIPs[ip] = true
+					if isProxied {
+						proxiedIPs[ip] = true // помечаем как проксируемый
+					}
 					ipToDomain[ip] = append(ipToDomain[ip], domain)
 				}
 			}
@@ -762,6 +836,8 @@ func (b *Bot) Run() {
 			b.handleSiteCommand(update.Message)
 		case "conn":
 			b.handleConnCommand(update.Message)
+		case "log":
+			b.handleLogCommand(update.Message)
 		default:
 			if b.isAuthorized(update.Message.Chat.ID) {
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "❌ Неизвестная команда. Используйте /help для справки.")
