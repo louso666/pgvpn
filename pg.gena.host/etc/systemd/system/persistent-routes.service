@@ -1,0 +1,16 @@
+[Unit]
+Description=Persistent Routes via WireGuard
+After=wg-quick@wg200.service
+Wants=wg-quick@wg200.service
+PartOf=wg-quick@wg200.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/etc/scripts/persistent-routes.sh start
+ExecStop=/etc/scripts/persistent-routes.sh stop
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target 

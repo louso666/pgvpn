@@ -1,0 +1,42 @@
+*filter
+:INPUT DROP [136:6439]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [1156:151098]
+-A INPUT -s 159.69.33.152/32 -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+-A INPUT -p udp -m udp --dport 16200 -j ACCEPT
+-A INPUT -s 159.69.33.152/32 -p udp -m udp --dport 4242 -j ACCEPT
+-A INPUT -s 10.200.0.0/24 -j ACCEPT
+-A INPUT -s 10.169.0.0/24 -j ACCEPT
+-A INPUT -s 10.168.0.0/24 -j ACCEPT
+-A INPUT -s 10.136.0.0/24 -j ACCEPT
+-A INPUT -s 10.132.0.0/24 -j ACCEPT
+-A INPUT -s 10.128.0.0/24 -j ACCEPT
+-A INPUT -s 10.42.0.0/30 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 3 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 11 -j ACCEPT
+-A INPUT -s 10.200.0.0/24 -p tcp -m tcp --dport 53 -j ACCEPT
+-A INPUT -s 10.200.0.0/24 -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -s 192.168.0.0/24 -p tcp -m tcp --dport 53 -j ACCEPT
+-A INPUT -s 192.168.0.0/24 -p udp -m udp --dport 53 -j ACCEPT
+-A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -i fou42 -j ACCEPT
+-A FORWARD -o fou42 -j ACCEPT
+-A FORWARD -i wg200 -j ACCEPT
+-A FORWARD -o wg200 -j ACCEPT
+-A OUTPUT -d 159.69.33.152/32 -j ACCEPT
+-A OUTPUT -o lo -j ACCEPT
+-A OUTPUT -d 159.69.33.152/32 -p udp -m udp --sport 4242 -j ACCEPT
+COMMIT
+*nat
+:PREROUTING ACCEPT [155:7547]
+:INPUT ACCEPT [19:1108]
+:OUTPUT ACCEPT [54:3383]
+:POSTROUTING ACCEPT [54:3383]
+-A POSTROUTING -s 10.200.0.0/24 ! -d 10.200.0.0/24 -o eth0 -j MASQUERADE
+COMMIT
