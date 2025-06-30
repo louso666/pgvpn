@@ -21,6 +21,12 @@ const (
 	botToken = "8153937790:AAE49qW06omMZs5yc5VzOCv3bpmwHe_zaqk"
 	password = "xnbdjxnbdj"
 	dbPath   = "/root/bot.db"
+	// Файлы для паттернов по типам маршрутизации
+	patternFileDE  = "/root/site"     // для Германии (de) - обратная совместимость
+	patternFileRU2 = "/root/site_ru2" // для России через pg2 (ru2)
+	// ipset списки
+	ipsetDE  = "proxied"   // для трафика через Германию
+	ipsetRU2 = "pg2_proxy" // для трафика через pg2
 )
 
 // ConnRecord представляет информацию о неудачном соединении
@@ -120,9 +126,14 @@ func (b *Bot) setupBotCommands() {
 	commands := []tgbotapi.BotCommand{
 		{Command: "pass", Description: "Авторизация в боте"},
 		{Command: "wg", Description: "Создать WireGuard конфиг + файл"},
-		{Command: "add_site", Description: "Добавить сайт + исторические IP в ipset"},
-		{Command: "remove_site", Description: "Удалить сайт + очистить ipset"},
-		{Command: "site", Description: "Показать паттерны или IP по доменам"},
+		{Command: "add_de", Description: "Добавить сайт в список DE (Германия)"},
+		{Command: "add_ru2", Description: "Добавить сайт в список RU2 (через pg2)"},
+		{Command: "remove_de", Description: "Удалить сайт из списка DE"},
+		{Command: "remove_ru2", Description: "Удалить сайт из списка RU2"},
+		{Command: "site", Description: "Показать все паттерны или IP по доменам"},
+		{Command: "de", Description: "Показать только DE паттерны/домены"},
+		{Command: "ru", Description: "Показать только RU домены (прямые)"},
+		{Command: "ru2", Description: "Показать только RU2 паттерны/домены"},
 		{Command: "conn", Description: "Показать заблокированные соединения"},
 		{Command: "log", Description: "Показать последние N доменов (обычные)"},
 		{Command: "help", Description: "Показать справку по командам"},
@@ -227,7 +238,7 @@ func (b *Bot) handleWgCommand(message *tgbotapi.Message) {
 	b.api.Send(doc)
 }
 
-func (b *Bot) handleAddSiteCommand(message *tgbotapi.Message) {
+func (b *Bot) handleAddDeCommand(message *tgbotapi.Message) {
 	if !b.isAuthorized(message.Chat.ID) {
 		msg := tgbotapi.NewMessage(message.Chat.ID, "❌ Сначала авторизуйтесь: /pass <пароль>")
 		b.api.Send(msg)
@@ -236,34 +247,39 @@ func (b *Bot) handleAddSiteCommand(message *tgbotapi.Message) {
 
 	args := strings.Fields(message.Text)
 	if len(args) < 2 {
-		msg := tgbotapi.NewMessage(message.Chat.ID, "Использование: /add_site <паттерн>")
+		msg := tgbotapi.NewMessage(message.Chat.ID, "Использование: /add_de <паттерн>")
 		b.api.Send(msg)
 		return
 	}
 
 	pattern := args[1]
 
-	// Добавляем в файл /root/site
+	// Удаляем из RU2 списка если есть там
+	b.removePatternFromOtherFile(pattern, "ru2")
+
+	// Добавляем в DE файл
 	if err := b.addPatternToFile(pattern); err != nil {
 		msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("❌ Ошибка добавления паттерна: %v", err))
 		b.api.Send(msg)
 		return
 	}
 
-	// Добавляем исторические IP в ipset
+	// Добавляем исторические IP в DE ipset
 	ips := b.getHistoricalIPs(pattern)
 	added := 0
 	for _, ip := range ips {
 		if err := b.addIPToIpset(ip); err == nil {
 			added++
 		}
+		// Удаляем из RU2 ipset если был там
+		b.removeIPFromIpsetRU2(ip)
 	}
 
-	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("✅ Паттерн '%s' добавлен. Добавлено %d IP из истории в ipset.", pattern, added))
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("✅ Паттерн '%s' добавлен в DE список. Добавлено %d IP из истории в ipset.", pattern, added))
 	b.api.Send(msg)
 }
 
-func (b *Bot) handleRemoveSiteCommand(message *tgbotapi.Message) {
+func (b *Bot) handleAddRU2Command(message *tgbotapi.Message) {
 	if !b.isAuthorized(message.Chat.ID) {
 		msg := tgbotapi.NewMessage(message.Chat.ID, "❌ Сначала авторизуйтесь: /pass <пароль>")
 		b.api.Send(msg)
@@ -272,24 +288,65 @@ func (b *Bot) handleRemoveSiteCommand(message *tgbotapi.Message) {
 
 	args := strings.Fields(message.Text)
 	if len(args) < 2 {
-		msg := tgbotapi.NewMessage(message.Chat.ID, "Использование: /remove_site <паттерн>")
+		msg := tgbotapi.NewMessage(message.Chat.ID, "Использование: /add_ru2 <паттерн>")
 		b.api.Send(msg)
 		return
 	}
 
 	pattern := args[1]
 
-	// Получаем IP для удаления из ipset
+	// Удаляем из DE списка если есть там
+	b.removePatternFromOtherFile(pattern, "de")
+
+	// Добавляем в RU2 файл
+	if err := b.addPatternToFileRU2(pattern); err != nil {
+		msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("❌ Ошибка добавления паттерна: %v", err))
+		b.api.Send(msg)
+		return
+	}
+
+	// Добавляем исторические IP в RU2 ipset
+	ips := b.getHistoricalIPs(pattern)
+	added := 0
+	for _, ip := range ips {
+		if err := b.addIPToIpsetRU2(ip); err == nil {
+			added++
+		}
+		// Удаляем из DE ipset если был там
+		b.removeIPFromIpset(ip)
+	}
+
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("✅ Паттерн '%s' добавлен в RU2 список. Добавлено %d IP из истории в ipset.", pattern, added))
+	b.api.Send(msg)
+}
+
+func (b *Bot) handleRemoveDeCommand(message *tgbotapi.Message) {
+	if !b.isAuthorized(message.Chat.ID) {
+		msg := tgbotapi.NewMessage(message.Chat.ID, "❌ Сначала авторизуйтесь: /pass <пароль>")
+		b.api.Send(msg)
+		return
+	}
+
+	args := strings.Fields(message.Text)
+	if len(args) < 2 {
+		msg := tgbotapi.NewMessage(message.Chat.ID, "Использование: /remove_de <паттерн>")
+		b.api.Send(msg)
+		return
+	}
+
+	pattern := args[1]
+
+	// Получаем IP для удаления из DE ipset
 	ips := b.getHistoricalIPs(pattern)
 
-	// Удаляем из файла /root/site
+	// Удаляем из DE файла
 	if err := b.removePatternFromFile(pattern); err != nil {
 		msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("❌ Ошибка удаления паттерна: %v", err))
 		b.api.Send(msg)
 		return
 	}
 
-	// Удаляем IP из ipset
+	// Удаляем IP из DE ipset
 	removed := 0
 	for _, ip := range ips {
 		if err := b.removeIPFromIpset(ip); err == nil {
@@ -297,7 +354,45 @@ func (b *Bot) handleRemoveSiteCommand(message *tgbotapi.Message) {
 		}
 	}
 
-	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("✅ Паттерн '%s' удален. Удалено %d IP из ipset.", pattern, removed))
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("✅ Паттерн '%s' удален из DE списка. Удалено %d IP из ipset.", pattern, removed))
+	b.api.Send(msg)
+}
+
+func (b *Bot) handleRemoveRU2Command(message *tgbotapi.Message) {
+	if !b.isAuthorized(message.Chat.ID) {
+		msg := tgbotapi.NewMessage(message.Chat.ID, "❌ Сначала авторизуйтесь: /pass <пароль>")
+		b.api.Send(msg)
+		return
+	}
+
+	args := strings.Fields(message.Text)
+	if len(args) < 2 {
+		msg := tgbotapi.NewMessage(message.Chat.ID, "Использование: /remove_ru2 <паттерн>")
+		b.api.Send(msg)
+		return
+	}
+
+	pattern := args[1]
+
+	// Получаем IP для удаления из RU2 ipset
+	ips := b.getHistoricalIPs(pattern)
+
+	// Удаляем из RU2 файла
+	if err := b.removePatternFromFileRU2(pattern); err != nil {
+		msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("❌ Ошибка удаления паттерна: %v", err))
+		b.api.Send(msg)
+		return
+	}
+
+	// Удаляем IP из RU2 ipset
+	removed := 0
+	for _, ip := range ips {
+		if err := b.removeIPFromIpsetRU2(ip); err == nil {
+			removed++
+		}
+	}
+
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf("✅ Паттерн '%s' удален из RU2 списка. Удалено %d IP из ipset.", pattern, removed))
 	b.api.Send(msg)
 }
 
@@ -343,6 +438,66 @@ func (b *Bot) handleSiteCommand(message *tgbotapi.Message) {
 		// Небольшая задержка между сообщениями
 		time.Sleep(100 * time.Millisecond)
 	}
+}
+
+func (b *Bot) handleDeCommand(message *tgbotapi.Message) {
+	if !b.isAuthorized(message.Chat.ID) {
+		msg := tgbotapi.NewMessage(message.Chat.ID, "❌ Сначала авторизуйтесь: /pass <пароль>")
+		b.api.Send(msg)
+		return
+	}
+
+	args := strings.Fields(message.Text)
+
+	// Если нет параметров - показываем все DE паттерны
+	if len(args) < 2 {
+		b.showPatternsDE(message.Chat.ID)
+		return
+	}
+
+	// Показываем IP только для указанного паттерна из DE списка
+	pattern := args[1]
+	b.showPatternDetails(message.Chat.ID, pattern, "de")
+}
+
+func (b *Bot) handleRuCommand(message *tgbotapi.Message) {
+	if !b.isAuthorized(message.Chat.ID) {
+		msg := tgbotapi.NewMessage(message.Chat.ID, "❌ Сначала авторизуйтесь: /pass <пароль>")
+		b.api.Send(msg)
+		return
+	}
+
+	args := strings.Fields(message.Text)
+
+	// Если нет параметров - показываем все RU домены (домены не в списках)
+	if len(args) < 2 {
+		b.showPatternsRU(message.Chat.ID)
+		return
+	}
+
+	// Показываем IP только для указанного паттерна, который идет напрямую
+	pattern := args[1]
+	b.showPatternDetails(message.Chat.ID, pattern, "ru")
+}
+
+func (b *Bot) handleRU2Command(message *tgbotapi.Message) {
+	if !b.isAuthorized(message.Chat.ID) {
+		msg := tgbotapi.NewMessage(message.Chat.ID, "❌ Сначала авторизуйтесь: /pass <пароль>")
+		b.api.Send(msg)
+		return
+	}
+
+	args := strings.Fields(message.Text)
+
+	// Если нет параметров - показываем все RU2 паттерны
+	if len(args) < 2 {
+		b.showPatternsRU2(message.Chat.ID)
+		return
+	}
+
+	// Показываем IP только для указанного паттерна из RU2 списка
+	pattern := args[1]
+	b.showPatternDetails(message.Chat.ID, pattern, "ru2")
 }
 
 func (b *Bot) handleConnCommand(message *tgbotapi.Message) {
@@ -444,29 +599,52 @@ func (b *Bot) handleHelpCommand(message *tgbotapi.Message) {
 
 /pass <пароль> - Авторизация в боте
 /wg <username> - Создать WireGuard конфиг + файл
-/add_site <паттерн> - Добавить сайт + исторические IP в ipset
-/remove_site <паттерн> - Удалить сайт + очистить ipset
-/site [паттерн] - Показать паттерны или IP по доменам
-/conn - Показать заблокированные соединения (повторные попытки)
-/log [n] - Показать последние N доменов (обычные), по умолчанию 10
+
+🌍 Управление маршрутизацией:
+/add_de <паттерн> - Добавить сайт в список DE (через Германию)
+/add_ru2 <паттерн> - Добавить сайт в список RU2 (через pg2)
+/remove_de <паттерн> - Удалить сайт из списка DE
+/remove_ru2 <паттерн> - Удалить сайт из списка RU2
+
+📊 Просмотр:
+/site [паттерн] - Показать все паттерны или IP по доменам
+/de [паттерн] - Показать только DE паттерны/домены
+/ru [паттерн] - Показать только RU домены (прямые)
+/ru2 [паттерн] - Показать только RU2 паттерны/домены
+/conn - Показать заблокированные соединения
+/log [n] - Показать последние N доменов (обычные)
 /help - Показать эту справку
 
-📝 Примеры:
-/site          # показать все паттерны с количеством IP
-/site you      # покажет youtube.com, youtu.be с IP (сворачиваемо)
-/site cursor   # покажет api2.cursor.sh с IP
-/add_site figma
-/wg myuser
+🛣️ Маршруты IP:
+[de🇩🇪] - через Германию (p.nirhub.ru)
+[ru2🇷🇺] - через pg2 (второй российский сервер)
+[ru🇷🇺] - напрямую из России (pg.gena.host)
 
-💡 /site поддерживает сворачиваемые блоки
-🚫 /conn показывает только заблокированные IP (с повторными попытками)`
+📝 Примеры:
+/add_de figma    # добавит figma в список через Германию
+/add_ru2 vk      # добавит vk в список через pg2
+/de you          # покажет youtube из DE списка
+/ru2             # покажет все RU2 паттерны
+
+💡 При добавлении в один список паттерн автоматически удаляется из другого`
 
 	msg := tgbotapi.NewMessage(message.Chat.ID, help)
 	b.api.Send(msg)
 }
 
 func (b *Bot) addPatternToFile(pattern string) error {
-	file, err := os.OpenFile(patternFile, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	file, err := os.OpenFile(patternFileDE, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(pattern + "\n")
+	return err
+}
+
+func (b *Bot) addPatternToFileRU2(pattern string) error {
+	file, err := os.OpenFile(patternFileRU2, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}
@@ -477,7 +655,7 @@ func (b *Bot) addPatternToFile(pattern string) error {
 }
 
 func (b *Bot) removePatternFromFile(pattern string) error {
-	content, err := os.ReadFile(patternFile)
+	content, err := os.ReadFile(patternFileDE)
 	if err != nil {
 		return err
 	}
@@ -491,7 +669,58 @@ func (b *Bot) removePatternFromFile(pattern string) error {
 		}
 	}
 
-	return os.WriteFile(patternFile, []byte(strings.Join(newLines, "\n")), 0644)
+	return os.WriteFile(patternFileDE, []byte(strings.Join(newLines, "\n")), 0644)
+}
+
+func (b *Bot) removePatternFromFileRU2(pattern string) error {
+	content, err := os.ReadFile(patternFileRU2)
+	if err != nil {
+		return err
+	}
+
+	lines := strings.Split(string(content), "\n")
+	var newLines []string
+
+	for _, line := range lines {
+		if strings.TrimSpace(line) != pattern {
+			newLines = append(newLines, line)
+		}
+	}
+
+	return os.WriteFile(patternFileRU2, []byte(strings.Join(newLines, "\n")), 0644)
+}
+
+// removePatternFromOtherFile удаляет паттерн из файла указанного типа
+func (b *Bot) removePatternFromOtherFile(pattern string, fromFileType string) error {
+	var filepath string
+	switch fromFileType {
+	case "de":
+		filepath = patternFileDE
+	case "ru2":
+		filepath = patternFileRU2
+	default:
+		return nil // неизвестный тип файла
+	}
+
+	content, err := os.ReadFile(filepath)
+	if err != nil {
+		// Файл не существует - это нормально
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
+
+	lines := strings.Split(string(content), "\n")
+	var newLines []string
+
+	for _, line := range lines {
+		if strings.TrimSpace(line) != pattern {
+			newLines = append(newLines, line)
+		}
+	}
+
+	return os.WriteFile(filepath, []byte(strings.Join(newLines, "\n")), 0644)
 }
 
 func (b *Bot) getHistoricalIPs(pattern string) []string {
@@ -529,21 +758,78 @@ func (b *Bot) getHistoricalIPsWithDomains(pattern string) map[string][]string {
 
 // showAllPatterns показывает все текущие паттерны с количеством IP
 func (b *Bot) showAllPatterns(chatID int64) {
-	// Загружаем паттерны из файла
-	patterns, err := b.loadPatterns()
+	// Загружаем паттерны DE
+	patternsDE, err := b.loadPatterns()
 	if err != nil {
-		msg := tgbotapi.NewMessage(chatID, "❌ Ошибка загрузки паттернов")
-		b.api.Send(msg)
-		return
+		patternsDE = []string{}
 	}
 
-	if len(patterns) == 0 {
+	// Загружаем паттерны RU2
+	patternsRU2, err := b.loadPatternsRU2()
+	if err != nil {
+		patternsRU2 = []string{}
+	}
+
+	totalPatterns := len(patternsDE) + len(patternsRU2)
+	if totalPatterns == 0 {
 		msg := tgbotapi.NewMessage(chatID, "📝 Паттерны не найдены")
 		b.api.Send(msg)
 		return
 	}
 
-	response := fmt.Sprintf("📝 <b>Текущие паттерны</b> (%d):\n\n", len(patterns))
+	response := fmt.Sprintf("📝 <b>Все паттерны</b> (%d):\n\n", totalPatterns)
+
+	// DE паттерны
+	if len(patternsDE) > 0 {
+		response += "🇩🇪 <b>DE (через Германию):</b>\n"
+		for _, pattern := range patternsDE {
+			domainIPs := b.getHistoricalIPsWithDomains(pattern)
+			totalIPs := 0
+			for _, ips := range domainIPs {
+				totalIPs += len(ips)
+			}
+			response += fmt.Sprintf("   🔹 <code>%s</code> — %d IP\n", pattern, totalIPs)
+		}
+		response += "\n"
+	}
+
+	// RU2 паттерны
+	if len(patternsRU2) > 0 {
+		response += "🇷🇺 <b>RU2 (через pg2):</b>\n"
+		for _, pattern := range patternsRU2 {
+			domainIPs := b.getHistoricalIPsWithDomains(pattern)
+			totalIPs := 0
+			for _, ips := range domainIPs {
+				totalIPs += len(ips)
+			}
+			response += fmt.Sprintf("   🔹 <code>%s</code> — %d IP\n", pattern, totalIPs)
+		}
+		response += "\n"
+	}
+
+	response += "💡 Используйте <code>/de</code>, <code>/ru2</code>, <code>/ru</code> для детального просмотра"
+
+	msg := tgbotapi.NewMessage(chatID, response)
+	msg.ParseMode = "HTML"
+	b.api.Send(msg)
+}
+
+// showPatternsDE показывает только DE паттерны
+func (b *Bot) showPatternsDE(chatID int64) {
+	patterns, err := b.loadPatterns()
+	if err != nil {
+		msg := tgbotapi.NewMessage(chatID, "❌ Ошибка загрузки DE паттернов")
+		b.api.Send(msg)
+		return
+	}
+
+	if len(patterns) == 0 {
+		msg := tgbotapi.NewMessage(chatID, "📝 DE паттерны не найдены")
+		b.api.Send(msg)
+		return
+	}
+
+	response := fmt.Sprintf("🇩🇪 <b>DE паттерны (через Германию)</b> (%d):\n\n", len(patterns))
 
 	for _, pattern := range patterns {
 		domainIPs := b.getHistoricalIPsWithDomains(pattern)
@@ -554,17 +840,154 @@ func (b *Bot) showAllPatterns(chatID int64) {
 		response += fmt.Sprintf("🔹 <code>%s</code> — %d IP\n", pattern, totalIPs)
 	}
 
-	response += "\n💡 Используйте <code>/site &lt;паттерн&gt;</code> для детальной информации"
+	response += "\n💡 Используйте <code>/de &lt;паттерн&gt;</code> для детальной информации"
 
 	msg := tgbotapi.NewMessage(chatID, response)
 	msg.ParseMode = "HTML"
 	b.api.Send(msg)
 }
 
+// showPatternsRU2 показывает только RU2 паттерны
+func (b *Bot) showPatternsRU2(chatID int64) {
+	patterns, err := b.loadPatternsRU2()
+	if err != nil {
+		msg := tgbotapi.NewMessage(chatID, "❌ Ошибка загрузки RU2 паттернов")
+		b.api.Send(msg)
+		return
+	}
+
+	if len(patterns) == 0 {
+		msg := tgbotapi.NewMessage(chatID, "📝 RU2 паттерны не найдены")
+		b.api.Send(msg)
+		return
+	}
+
+	response := fmt.Sprintf("🇷🇺 <b>RU2 паттерны (через pg2)</b> (%d):\n\n", len(patterns))
+
+	for _, pattern := range patterns {
+		domainIPs := b.getHistoricalIPsWithDomains(pattern)
+		totalIPs := 0
+		for _, ips := range domainIPs {
+			totalIPs += len(ips)
+		}
+		response += fmt.Sprintf("🔹 <code>%s</code> — %d IP\n", pattern, totalIPs)
+	}
+
+	response += "\n💡 Используйте <code>/ru2 &lt;паттерн&gt;</code> для детальной информации"
+
+	msg := tgbotapi.NewMessage(chatID, response)
+	msg.ParseMode = "HTML"
+	b.api.Send(msg)
+}
+
+// showPatternsRU показывает домены, которые идут напрямую (не в списках)
+func (b *Bot) showPatternsRU(chatID int64) {
+	response := "🇷🇺 <b>RU домены (прямое соединение)</b>:\n\n"
+	response += "Эти домены не находятся в списках DE или RU2 и идут напрямую через pg.gena.host.\n\n"
+	response += "💡 Для просмотра конкретного домена используйте: <code>/ru &lt;паттерн&gt;</code>\n"
+	response += "💡 Для перевода в списки используйте: <code>/add_de</code> или <code>/add_ru2</code>"
+
+	msg := tgbotapi.NewMessage(chatID, response)
+	msg.ParseMode = "HTML"
+	b.api.Send(msg)
+}
+
+// showPatternDetails показывает детальную информацию о паттерне в зависимости от типа
+func (b *Bot) showPatternDetails(chatID int64, pattern string, routeType string) {
+	domainIPs := b.getHistoricalIPsWithDomains(pattern)
+
+	if len(domainIPs) == 0 {
+		msg := tgbotapi.NewMessage(chatID, fmt.Sprintf("❌ IP адреса для паттерна '%s' не найдены", pattern))
+		b.api.Send(msg)
+		return
+	}
+
+	// Фильтруем IP в зависимости от типа маршрута
+	filteredDomainIPs := make(map[string][]string)
+	for domain, ips := range domainIPs {
+		var filteredIPs []string
+		for _, ip := range ips {
+			ipRoute := b.getIPRouteStatus(ip)
+
+			// Проверяем соответствие типу маршрута
+			switch routeType {
+			case "de":
+				if strings.Contains(ipRoute, "de🇩🇪") {
+					filteredIPs = append(filteredIPs, ip)
+				}
+			case "ru2":
+				if strings.Contains(ipRoute, "ru2🇷🇺") {
+					filteredIPs = append(filteredIPs, ip)
+				}
+			case "ru":
+				if strings.Contains(ipRoute, "ru🇷🇺") && !strings.Contains(ipRoute, "ru2🇷🇺") {
+					filteredIPs = append(filteredIPs, ip)
+				}
+			}
+		}
+		if len(filteredIPs) > 0 {
+			filteredDomainIPs[domain] = filteredIPs
+		}
+	}
+
+	if len(filteredDomainIPs) == 0 {
+		routeNames := map[string]string{
+			"de":  "DE (через Германию)",
+			"ru2": "RU2 (через pg2)",
+			"ru":  "RU (напрямую)",
+		}
+		msg := tgbotapi.NewMessage(chatID, fmt.Sprintf("❌ IP адреса для паттерна '%s' с маршрутом %s не найдены", pattern, routeNames[routeType]))
+		b.api.Send(msg)
+		return
+	}
+
+	// Подсчитываем общее количество IP
+	totalIPs := 0
+	for _, ips := range filteredDomainIPs {
+		totalIPs += len(ips)
+	}
+
+	// Создаем HTML сообщения с ограничением по размеру
+	messages := b.createSiteMessages(pattern, filteredDomainIPs, totalIPs)
+
+	// Отправляем сообщения
+	for _, msgText := range messages {
+		msg := tgbotapi.NewMessage(chatID, msgText)
+		msg.ParseMode = "HTML"
+		b.api.Send(msg)
+
+		// Небольшая задержка между сообщениями
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+
 // loadPatterns загружает паттерны из файла
 func (b *Bot) loadPatterns() ([]string, error) {
-	content, err := os.ReadFile(patternFile)
+	content, err := os.ReadFile(patternFileDE)
 	if err != nil {
+		return nil, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+	var patterns []string
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line != "" && !strings.HasPrefix(line, "#") {
+			patterns = append(patterns, line)
+		}
+	}
+
+	return patterns, nil
+}
+
+// loadPatternsRU2 загружает паттерны RU2 из файла
+func (b *Bot) loadPatternsRU2() ([]string, error) {
+	content, err := os.ReadFile(patternFileRU2)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return []string{}, nil // файл не существует - возвращаем пустой список
+		}
 		return nil, err
 	}
 
@@ -612,6 +1035,26 @@ func (b *Bot) createSiteMessages(pattern string, domainIPs map[string][]string, 
 	return messages
 }
 
+// getIPRouteStatus определяет маршрут для IP адреса
+func (b *Bot) getIPRouteStatus(ip string) string {
+	// Проверяем есть ли IP в ipset "proxied" (DE)
+	cmd := exec.Command("ipset", "test", ipsetDE, ip)
+	err := cmd.Run()
+	if err == nil {
+		return "de🇩🇪"
+	}
+
+	// Проверяем есть ли IP в ipset "pg2_proxy" (RU2)
+	cmd = exec.Command("ipset", "test", ipsetRU2, ip)
+	err = cmd.Run()
+	if err == nil {
+		return "ru2🇷🇺"
+	}
+
+	// IP не в ipset'ах - идет напрямую через Россию
+	return "ru🇷🇺"
+}
+
 // createDomainBlock создает HTML блок для домена с IP адресами
 func (b *Bot) createDomainBlock(domain string, ips []string) string {
 	const maxIPsToShow = 20
@@ -622,7 +1065,8 @@ func (b *Bot) createDomainBlock(domain string, ips []string) string {
 	// Если IP меньше 5, не сворачиваем
 	if ipCount <= 5 {
 		for _, ip := range ips {
-			block += fmt.Sprintf("   • <code>%s</code>\n", ip)
+			routeStatus := b.getIPRouteStatus(ip)
+			block += fmt.Sprintf("   • <code>%s</code> [%s]\n", ip, routeStatus)
 		}
 	} else {
 		// Создаем сворачиваемый блок
@@ -636,7 +1080,8 @@ func (b *Bot) createDomainBlock(domain string, ips []string) string {
 		}
 
 		for _, ip := range displayIPs {
-			ipList += fmt.Sprintf("   • <code>%s</code>\n", ip)
+			routeStatus := b.getIPRouteStatus(ip)
+			ipList += fmt.Sprintf("   • <code>%s</code> [%s]\n", ip, routeStatus)
 		}
 
 		if hasMore {
@@ -682,12 +1127,22 @@ func (b *Bot) createConnMessages(failedConnections map[string][]string, totalIPs
 }
 
 func (b *Bot) addIPToIpset(ip string) error {
-	cmd := exec.Command("ipset", "add", ipsetName, ip, "-exist")
+	cmd := exec.Command("ipset", "add", ipsetDE, ip, "-exist")
 	return cmd.Run()
 }
 
 func (b *Bot) removeIPFromIpset(ip string) error {
-	cmd := exec.Command("ipset", "del", ipsetName, ip)
+	cmd := exec.Command("ipset", "del", ipsetDE, ip)
+	return cmd.Run()
+}
+
+func (b *Bot) addIPToIpsetRU2(ip string) error {
+	cmd := exec.Command("ipset", "add", ipsetRU2, ip, "-exist")
+	return cmd.Run()
+}
+
+func (b *Bot) removeIPFromIpsetRU2(ip string) error {
+	cmd := exec.Command("ipset", "del", ipsetRU2, ip)
 	return cmd.Run()
 }
 
@@ -828,12 +1283,22 @@ func (b *Bot) Run() {
 			b.handlePassCommand(update.Message)
 		case "wg":
 			b.handleWgCommand(update.Message)
-		case "add_site":
-			b.handleAddSiteCommand(update.Message)
-		case "remove_site":
-			b.handleRemoveSiteCommand(update.Message)
+		case "add_de":
+			b.handleAddDeCommand(update.Message)
+		case "add_ru2":
+			b.handleAddRU2Command(update.Message)
+		case "remove_de":
+			b.handleRemoveDeCommand(update.Message)
+		case "remove_ru2":
+			b.handleRemoveRU2Command(update.Message)
 		case "site":
 			b.handleSiteCommand(update.Message)
+		case "de":
+			b.handleDeCommand(update.Message)
+		case "ru":
+			b.handleRuCommand(update.Message)
+		case "ru2":
+			b.handleRU2Command(update.Message)
 		case "conn":
 			b.handleConnCommand(update.Message)
 		case "log":

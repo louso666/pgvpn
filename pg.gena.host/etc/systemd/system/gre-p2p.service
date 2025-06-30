@@ -1,0 +1,23 @@
+[Unit]
+Description=GRE pg↔p
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+# на всякий случай убьём старый туннель
+ExecStartPre=-/usr/sbin/ip tunnel del gre-p2p
+
+# --- СОЗДАЁМ ---
+# ПРАВЬ local/remote и адрес внутри для каждой стороны!
+ExecStart=/usr/sbin/ip tunnel add gre-p2p mode gre local 192.168.0.200 remote 159.69.33.152 ttl 255
+ExecStart=/usr/sbin/ip link set gre-p2p mtu 1476 up
+ExecStart=/usr/sbin/ip addr add 10.24.0.1/30 dev gre-p2p
+
+# --- СНОСИМ ---
+ExecStop=/usr/sbin/ip tunnel del gre-p2p
+
+[Install]
+WantedBy=multi-user.target

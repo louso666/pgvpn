@@ -1,0 +1,9 @@
+[Unit]
+Description=Ping GRE pg↔pg2 every 30s
+
+[Timer]
+OnBootSec=0
+OnUnitActiveSec=30
+
+[Install]
+WantedBy=timers.target 

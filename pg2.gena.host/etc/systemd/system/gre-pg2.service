@@ -1,0 +1,19 @@
+[Unit]
+Description=GRE pg2↔pg over WG200
+After=wg-quick@wg200.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+ExecStartPre=-/usr/sbin/ip tunnel del gre-pg2
+
+ExecStart=/usr/sbin/ip tunnel add gre-pg2 mode gre local 10.200.0.20 remote 10.200.0.1 ttl 255
+ExecStart=/usr/sbin/ip link set gre-pg2 mtu 1360 up
+ExecStart=/usr/sbin/ip addr add 10.26.0.2/30 dev gre-pg2
+
+ExecStop=/usr/sbin/ip tunnel del gre-pg2
+
+[Install]
+WantedBy=multi-user.target 

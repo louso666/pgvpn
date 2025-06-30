@@ -1,0 +1,8 @@
+[Unit]
+Description=One-shot ping to keep GRE up
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/ping -c1 -W1 -I gre-p2p 10.24.0.2

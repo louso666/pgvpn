@@ -16,14 +16,15 @@ import (
 )
 
 const (
-	patternFile   = "/root/site"      // файл с паттернами доменов
-	proxyDNS      = "10.24.0.2:53"    // DNS, через который резолвим "иностранцев"
-	ipsetName     = "proxied"         // ipset-лист для чужих айпишников
+	// DNS серверы
+	proxyDNS = "10.24.0.2:53" // DNS, через который резолвим "иностранцев" (DE)
+
+	// Файлы конфигурации
 	ipsetConfPath = "/etc/ipset.conf" // куда сохраняем ipset save
 	mapFile       = "/root/map.json"  // файл с маппингом домен->IP
-	refresh       = 5 * time.Second   // период релоада паттернов
 
-	// Параметры для асинхронного сохранения
+	// Тайминги
+	refresh      = 5 * time.Second  // период релоада паттернов
 	saveInterval = 10 * time.Second // интервал сохранения
 	batchTimeout = 2 * time.Second  // таймаут между сигналами для батчинга
 )
@@ -50,18 +51,19 @@ type DNSLog struct {
 // Server — минималистичный DNS прокси.
 // patterns держим под RWMutex, чтобы спокойно перезагружать на лету.
 type Server struct {
-	mu       sync.RWMutex
-	patterns []string
-	upstream string
-	ipMap    DomainIPMap
-	mapMu    sync.RWMutex
+	mu          sync.RWMutex
+	patternsDE  []string // паттерны для маршрутизации через DE (Германия)
+	patternsRU2 []string // паттерны для маршрутизации через RU2 (pg2)
+	upstream    string
+	ipMap       DomainIPMap
+	mapMu       sync.RWMutex
 
 	// Каналы для асинхронного сохранения
 	saveSignal chan SaveSignal
 	shutdownCh chan struct{}
 	saveWg     sync.WaitGroup
 
-	db *sql.DB // NEW: sqlite connection for logging
+	db *sql.DB // sqlite connection for logging
 }
 
 func main() {
@@ -98,8 +100,8 @@ func main() {
 	// Загружаем маппинг доменов и IP
 	s.loadIPMap()
 
-	// Первая загрузка /root/site.
-	log.Printf("Загружаем начальные паттерны из %s", patternFile)
+	// Первая загрузка паттернов из обоих файлов
+	log.Printf("Загружаем начальные паттерны DE и RU2")
 	s.reloadPatterns()
 
 	// Вычисляем дефолтный апстрим (первый nameserver из /etc/resolv.conf) или валимся в 192.168.0.200.
@@ -143,12 +145,38 @@ func main() {
 	}
 }
 
-// reloadPatterns перечитывает файл с паттернами.
+// reloadPatterns перечитывает файлы с паттернами DE и RU2.
 func (s *Server) reloadPatterns() {
-	f, err := os.Open(patternFile)
+	// Загружаем DE паттерны
+	patternsDE := s.loadPatternsFromFile(patternFileDE)
+
+	// Загружаем RU2 паттерны
+	patternsRU2 := s.loadPatternsFromFile(patternFileRU2)
+
+	s.mu.Lock()
+	oldCountDE := len(s.patternsDE)
+	oldCountRU2 := len(s.patternsRU2)
+	s.patternsDE = patternsDE
+	s.patternsRU2 = patternsRU2
+	s.mu.Unlock()
+
+	// Логируем изменения
+	if oldCountDE != len(patternsDE) {
+		log.Printf("DE паттерны перезагружены: было %d, стало %d", oldCountDE, len(patternsDE))
+	}
+	if oldCountRU2 != len(patternsRU2) {
+		log.Printf("RU2 паттерны перезагружены: было %d, стало %d", oldCountRU2, len(patternsRU2))
+	}
+}
+
+// loadPatternsFromFile загружает паттерны из указанного файла
+func (s *Server) loadPatternsFromFile(filename string) []string {
+	f, err := os.Open(filename)
 	if err != nil {
-		log.Printf("не могу открыть %s: %v", patternFile, err)
-		return
+		if !os.IsNotExist(err) {
+			log.Printf("не могу открыть %s: %v", filename, err)
+		}
+		return []string{}
 	}
 	defer f.Close()
 
@@ -161,32 +189,45 @@ func (s *Server) reloadPatterns() {
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		log.Printf("ошибка чтения %s: %v", patternFile, err)
-		return
+		log.Printf("ошибка чтения %s: %v", filename, err)
+		return []string{}
 	}
 
-	s.mu.Lock()
-	oldCount := len(s.patterns)
-	s.patterns = list
-	s.mu.Unlock()
-
-	// Логируем только если количество изменилось
-	if oldCount != len(list) {
-		log.Printf("Паттерны перезагружены: было %d, стало %d", oldCount, len(list))
-	}
+	return list
 }
 
-// matches проверяет, содержит ли домен один из паттернов.
-func (s *Server) matches(domain string) bool {
+// RouteType определяет тип маршрутизации
+type RouteType int
+
+const (
+	RouteRU  RouteType = iota // прямое соединение (RU)
+	RouteDE                   // через Германию (DE)
+	RouteRU2                  // через pg2 (RU2)
+)
+
+// matchesPattern проверяет, содержит ли домен один из паттернов и возвращает тип маршрута.
+func (s *Server) matchesPattern(domain string) RouteType {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	for _, p := range s.patterns {
+
+	// Сначала проверяем DE паттерны
+	for _, p := range s.patternsDE {
 		if strings.Contains(domain, p) {
-			log.Printf("Домен %s совпал с паттерном %s", domain, p)
-			return true
+			log.Printf("Домен %s совпал с DE паттерном %s", domain, p)
+			return RouteDE
 		}
 	}
-	return false
+
+	// Затем проверяем RU2 паттерны
+	for _, p := range s.patternsRU2 {
+		if strings.Contains(domain, p) {
+			log.Printf("Домен %s совпал с RU2 паттерном %s", domain, p)
+			return RouteRU2
+		}
+	}
+
+	// Если не найдено - прямое соединение
+	return RouteRU
 }
 
 // defaultUpstream вытаскивает первый nameserver из /etc/resolv.conf.
@@ -372,19 +413,29 @@ func (s *Server) handle(w dns.ResponseWriter, req *dns.Msg) {
 		log.Printf("Получен DNS запрос без вопросов")
 	}
 
-	if s.matches(qname) {
-		// домен из проксируемых -> резолв через 10.24.0.2
-		log.Printf("Домен %s (%s запрос) будет проксирован через %s", qname, qtype, proxyDNS)
+	routeType := s.matchesPattern(qname)
+
+	switch routeType {
+	case RouteDE:
+		// домен из DE паттернов -> резолв через 10.24.0.2 (Германия)
+		log.Printf("Домен %s (%s запрос) будет проксирован через DE: %s", qname, qtype, proxyDNS)
 		resp, err = s.forward(req, proxyDNS)
 		if err == nil {
-			s.processAnswers(resp, qname, true)
+			s.processAnswers(resp, qname, RouteDE)
 		}
-	} else {
-		// обычная халупа -> дефолтный апстрим
+	case RouteRU2:
+		// домен из RU2 паттернов -> резолв через обычный upstream, но IP пойдут в RU2 ipset
+		log.Printf("Домен %s (%s запрос) будет обработан через RU2 маршрут (upstream %s)", qname, qtype, s.upstream)
+		resp, err = s.forward(req, s.upstream)
+		if err == nil {
+			s.processAnswers(resp, qname, RouteRU2)
+		}
+	default: // RouteRU
+		// обычный домен -> дефолтный апстрим, без добавления в ipset
 		log.Printf("Домен %s (%s запрос) будет обработан через обычный upstream %s", qname, qtype, s.upstream)
 		resp, err = s.forward(req, s.upstream)
 		if err == nil {
-			s.processAnswers(resp, qname, false)
+			s.processAnswers(resp, qname, RouteRU)
 		}
 	}
 
@@ -424,9 +475,9 @@ func (s *Server) filterIPv6Records(msg *dns.Msg) {
 }
 
 // processAnswers обрабатывает все типы DNS записей из ответа.
-// A записи добавляются в ipset если домен проксируемый.
+// A записи добавляются в соответствующий ipset в зависимости от типа маршрута.
 // CNAME записи проверяются на необходимость проксирования целевого домена.
-func (s *Server) processAnswers(msg *dns.Msg, domain string, proxied bool) {
+func (s *Server) processAnswers(msg *dns.Msg, domain string, routeType RouteType) {
 	log.Printf("Обрабатываем %d записей из ответа для домена %s", len(msg.Answer), domain)
 
 	var ips []string
@@ -448,9 +499,13 @@ func (s *Server) processAnswers(msg *dns.Msg, domain string, proxied bool) {
 				s.addDomainIP(recordDomain, ip)
 			}
 
-			// Добавляем в ipset только если домен проксируемый
-			if proxied {
-				s.addIP(ip)
+			// Добавляем в соответствующий ipset в зависимости от типа маршрута
+			switch routeType {
+			case RouteDE:
+				s.addIPToDE(ip)
+			case RouteRU2:
+				s.addIPToRU2(ip)
+				// RouteRU - не добавляем в ipset, идет напрямую
 			}
 
 		case *dns.AAAA:
@@ -462,8 +517,13 @@ func (s *Server) processAnswers(msg *dns.Msg, domain string, proxied bool) {
 			cnames = append(cnames, target)
 
 			// Проверяем, нужно ли проксировать целевой домен CNAME
-			if s.matches(target) {
-				log.Printf("CNAME целевой домен %s совпадает с паттернами - будет проксирован", target)
+			targetRoute := s.matchesPattern(target)
+			if targetRoute != RouteRU {
+				routeNames := map[RouteType]string{
+					RouteDE:  "DE",
+					RouteRU2: "RU2",
+				}
+				log.Printf("CNAME целевой домен %s совпадает с паттернами %s", target, routeNames[targetRoute])
 			}
 
 		case *dns.MX:
@@ -491,17 +551,17 @@ func (s *Server) processAnswers(msg *dns.Msg, domain string, proxied bool) {
 	}
 
 	// Обрабатываем Additional и Authority секции для поиска дополнительных A записей
-	s.processAdditionalRecords(msg.Extra, domain, proxied)
-	s.processAdditionalRecords(msg.Ns, domain, proxied)
+	s.processAdditionalRecords(msg.Extra, domain, routeType)
+	s.processAdditionalRecords(msg.Ns, domain, routeType)
 
-	// После обработки всех записей логируем запрос (только если есть IP) – NEW
+	// После обработки всех записей логируем запрос (только если есть IP)
 	if len(ips) > 0 {
-		s.logDNS(domain, ips, proxied)
+		s.logDNS(domain, ips, routeType != RouteRU) // proxied = true если не RU
 	}
 }
 
 // processAdditionalRecords обрабатывает дополнительные записи (Additional и Authority секции)
-func (s *Server) processAdditionalRecords(records []dns.RR, originalDomain string, proxied bool) {
+func (s *Server) processAdditionalRecords(records []dns.RR, originalDomain string, routeType RouteType) {
 	for _, rr := range records {
 		switch ans := rr.(type) {
 		case *dns.A:
@@ -513,26 +573,60 @@ func (s *Server) processAdditionalRecords(records []dns.RR, originalDomain strin
 			s.addDomainIP(recordDomain, ip)
 
 			// Проверяем, нужно ли проксировать этот домен
-			if s.matches(recordDomain) {
-				log.Printf("Дополнительный домен %s совпадает с паттернами - добавляем IP в ipset", recordDomain)
-				s.addIP(ip)
+			domainRoute := s.matchesPattern(recordDomain)
+			if domainRoute != RouteRU {
+				routeNames := map[RouteType]string{
+					RouteDE:  "DE",
+					RouteRU2: "RU2",
+				}
+				log.Printf("Дополнительный домен %s совпадает с паттернами %s - добавляем IP в ipset", recordDomain, routeNames[domainRoute])
+
+				switch domainRoute {
+				case RouteDE:
+					s.addIPToDE(ip)
+				case RouteRU2:
+					s.addIPToRU2(ip)
+				}
 			}
 		}
 	}
 }
 
-// addIP — синхронное добавление в ipset + асинхронное сохранение.
-func (s *Server) addIP(ip string) {
-	log.Printf("Добавляем IP %s в ipset %s", ip, ipsetName)
+// addIPToDE — добавление IP в DE ipset (через Германию)
+func (s *Server) addIPToDE(ip string) {
+	log.Printf("Добавляем IP %s в DE ipset %s", ip, ipsetDE)
 
 	// Команда добавления IP (синхронно для быстрого ответа)
-	addCmd := exec.Command("ipset", "add", ipsetName, ip, "-exist")
+	addCmd := exec.Command("ipset", "add", ipsetDE, ip, "-exist")
 	addOutput, err := addCmd.CombinedOutput()
 	if err != nil {
-		log.Printf("Ошибка добавления IP %s в ipset: %v, вывод: %s", ip, err, string(addOutput))
+		log.Printf("Ошибка добавления IP %s в DE ipset: %v, вывод: %s", ip, err, string(addOutput))
 		return // не отправляем сигнал на сохранение, если добавление не удалось
 	} else {
-		log.Printf("IP %s успешно добавлен в ipset", ip)
+		log.Printf("IP %s успешно добавлен в DE ipset", ip)
+	}
+
+	// Отправляем сигнал для асинхронного сохранения ipset
+	select {
+	case s.saveSignal <- SaveIPSet:
+	default:
+		// Канал переполнен, пропускаем сигнал
+		log.Printf("Канал сохранения переполнен, пропускаем сигнал SaveIPSet для %s", ip)
+	}
+}
+
+// addIPToRU2 — добавление IP в RU2 ipset (через pg2)
+func (s *Server) addIPToRU2(ip string) {
+	log.Printf("Добавляем IP %s в RU2 ipset %s", ip, ipsetRU2)
+
+	// Команда добавления IP (синхронно для быстрого ответа)
+	addCmd := exec.Command("ipset", "add", ipsetRU2, ip, "-exist")
+	addOutput, err := addCmd.CombinedOutput()
+	if err != nil {
+		log.Printf("Ошибка добавления IP %s в RU2 ipset: %v, вывод: %s", ip, err, string(addOutput))
+		return // не отправляем сигнал на сохранение, если добавление не удалось
+	} else {
+		log.Printf("IP %s успешно добавлен в RU2 ipset", ip)
 	}
 
 	// Отправляем сигнал для асинхронного сохранения ipset
