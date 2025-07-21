@@ -1,0 +1,1199 @@
+🔍 ДЕТАЛЬНЫЙ АНАЛИЗ ПРОФИЛЯ IntelliJ IDEA v2
+=============================================
+Файл: IU-252.23591.19_tema_06.07.2025_11.32.52.jfr
+Дата анализа: Вс 06 июл 2025 11:39:30 EEST
+
+📊 ОБЩАЯ СВОДКА ПРОФИЛЯ:
+========================
+
+ Version: 2.0
+ Chunks: 2
+ Start: 2025-07-06 08:32:01 (UTC)
+ Duration: 101 s
+
+ Event Type                              Count  Size (bytes) 
+=============================================================
+ jdk.ObjectAllocationSample              13625        220901
+ profiler.WallClockSleeping               6419        119648
+ jdk.ExecutionSample                      4464         65843
+ jdk.CPULoad                               504         10080
+ profiler.UserEvent                        236         15174
+ jdk.Checkpoint                            166       1747165
+ jdk.GCHeapMemoryUsage                      51          1173
+ jdk.ObjectAllocationInNewTLAB              46          6023
+ jdk.G1HeapSummary                          44          1272
+ jdk.GCHeapSummary                          29          1189
+ jdk.ActiveSetting                          25           809
+ jdk.Metadata                                2        111416
+ jdk.JVMInformation                          1          4646
+ jdk.OSInformation                           1           246
+ jdk.ThreadPark                              1          1745
+ jdk.ActiveRecording                         1            74
+ jdk.FileForce                               0             0
+ jdk.FileRead                                0             0
+ jdk.FileWrite                               0             0
+ jdk.SocketRead                              0             0
+ jdk.ResidentSetSize                         0             0
+ jdk.ThreadStart                             0             0
+ jdk.SocketWrite                             0             0
+ jdk.ThreadEnd                               0             0
+ jdk.ThreadPark                              0             0
+ jdk.JavaExceptionThrow                      0             0
+ jdk.JavaMonitorEnter                        0             0
+ jdk.JavaMonitorWait                         0             0
+ jdk.ExceptionStatistics                     0             0
+ jdk.JavaMonitorInflate                      0             0
+ jdk.SyncOnValueBasedClass                   0             0
+ jdk.JavaErrorThrow                          0             0
+ jdk.ContinuationFreeze                      0             0
+ jdk.ContinuationThaw                        0             0
+ jdk.ActiveSetting                           0             0
+ jdk.X509Certificate                         0             0
+ jdk.ContinuationFreezeFast                  0             0
+ jdk.ContinuationFreezeSlow                  0             0
+ jdk.ActiveRecording                         0             0
+ jdk.ContinuationThawFast                    0             0
+ jdk.ContinuationThawSlow                    0             0
+ jdk.SecurityPropertyModification            0             0
+ jdk.ReservedStackActivation                 0             0
+ jdk.ClassLoad                               0             0
+ jdk.VirtualThreadStart                      0             0
+ jdk.ClassDefine                             0             0
+ jdk.ClassRedefinition                       0             0
+ jdk.VirtualThreadEnd                        0             0
+ jdk.RedefineClasses                         0             0
+ jdk.RetransformClasses                      0             0
+ jdk.VirtualThreadPinned                     0             0
+ jdk.ClassUnload                             0             0
+ jdk.IntFlagChanged                          0             0
+ jdk.VirtualThreadSubmitFailed               0             0
+ jdk.UnsignedIntFlagChanged                  0             0
+ jdk.DirectBufferStatistics                  0             0
+ jdk.LongFlagChanged                         0             0
+ jdk.UnsignedLongFlagChanged                 0             0
+ jdk.InitialSecurityProperty                 0             0
+ jdk.DoubleFlagChanged                       0             0
+ jdk.BooleanFlagChanged                      0             0
+ jdk.StringFlagChanged                       0             0
+ jdk.GCHeapSummary                           0             0
+ jdk.GCHeapMemoryPoolUsage                   0             0
+ jdk.MetaspaceSummary                        0             0
+ jdk.TLSHandshake                            0             0
+ jdk.MetaspaceGCThreshold                    0             0
+ jdk.MetaspaceAllocationFailure              0             0
+ jdk.MetaspaceOOM                            0             0
+ jdk.MetaspaceChunkFreeListSummary           0             0
+ jdk.PSHeapSummary                           0             0
+ jdk.GarbageCollection                       0             0
+ jdk.SystemGC                                0             0
+ jdk.ParallelOldGarbageCollection            0             0
+ jdk.YoungGarbageCollection                  0             0
+ jdk.OldGarbageCollection                    0             0
+ jdk.G1GarbageCollection                     0             0
+ jdk.G1MMU                                   0             0
+ jdk.EvacuationInformation                   0             0
+ jdk.GCReferenceStatistics                   0             0
+ jdk.ObjectCountAfterGC                      0             0
+ jdk.G1EvacuationYoungStatistics             0             0
+ jdk.G1EvacuationOldStatistics               0             0
+ jdk.G1BasicIHOP                             0             0
+ jdk.G1AdaptiveIHOP                          0             0
+ jdk.PromoteObjectInNewPLAB                  0             0
+ jdk.PromoteObjectOutsidePLAB                0             0
+ jdk.PromotionFailed                         0             0
+ jdk.EvacuationFailed                        0             0
+ jdk.ConcurrentModeFailure                   0             0
+ jdk.GCCPUTime                               0             0
+ jdk.GCPhasePause                            0             0
+ jdk.GCPhasePauseLevel1                      0             0
+ jdk.GCPhasePauseLevel2                      0             0
+ jdk.GCPhasePauseLevel3                      0             0
+ jdk.GCPhasePauseLevel4                      0             0
+ jdk.GCPhaseConcurrent                       0             0
+ jdk.GCPhaseConcurrentLevel1                 0             0
+ jdk.GCPhaseConcurrentLevel2                 0             0
+ jdk.GCPhaseParallel                         0             0
+ jdk.AllocationRequiringGC                   0             0
+ jdk.TenuringDistribution                    0             0
+ jdk.G1HeapRegionTypeChange                  0             0
+ jdk.JITRestart                              0             0
+ jdk.Compilation                             0             0
+ jdk.CompilerPhase                           0             0
+ jdk.CompilationFailure                      0             0
+ jdk.CompilerInlining                        0             0
+ jdk.CodeCacheFull                           0             0
+ jdk.Deoptimization                          0             0
+ jdk.SafepointBegin                          0             0
+ jdk.SafepointStateSynchronization           0             0
+ jdk.SafepointCleanup                        0             0
+ jdk.SafepointCleanupTask                    0             0
+ jdk.SafepointEnd                            0             0
+ jdk.ExecuteVMOperation                      0             0
+ jdk.Shutdown                                0             0
+ jdk.ObjectAllocationInNewTLAB               0             0
+ jdk.ObjectAllocationOutsideTLAB             0             0
+ jdk.OldObjectSample                         0             0
+ jdk.NativeMemoryUsage                       0             0
+ jdk.NativeMemoryUsageTotal                  0             0
+ jdk.DumpReason                              0             0
+ jdk.DataLoss                                0             0
+ jdk.ThreadSleep                             0             0
+ jdk.ObjectAllocationOutsideTLAB             0             0
+ jdk.JavaMonitorEnter                        0             0
+ jdk.OSInformation                           0             0
+ jdk.CPUInformation                          0             0
+ jdk.JVMInformation                          0             0
+ jdk.InitialSystemProperty                   0             0
+ jdk.NativeLibrary                           0             0
+ profiler.Log                                0             0
+ profiler.Window                             0             0
+ profiler.LiveObject                         0             0
+ profiler.WallClockSample                    0             0
+ profiler.Malloc                             0             0
+ profiler.Free                               0             0
+ jdk.ModuleRequire                           0             0
+ jdk.ModuleExport                            0             0
+ jdk.CompilerStatistics                      0             0
+ jdk.CompilerConfiguration                   0             0
+ jdk.CodeCacheStatistics                     0             0
+ jdk.IntFlag                                 0             0
+ jdk.UnsignedIntFlag                         0             0
+ jdk.LongFlag                                0             0
+ jdk.UnsignedLongFlag                        0             0
+ jdk.DoubleFlag                              0             0
+ jdk.BooleanFlag                             0             0
+ jdk.StringFlag                              0             0
+ jdk.ObjectCount                             0             0
+ jdk.G1HeapRegionInformation                 0             0
+ jdk.GCConfiguration                         0             0
+ jdk.GCSurvivorConfiguration                 0             0
+ jdk.GCTLABConfiguration                     0             0
+ jdk.GCHeapConfiguration                     0             0
+ jdk.YoungGenerationConfiguration            0             0
+ jdk.ZYoungGarbageCollection                 0             0
+ jdk.ZOldGarbageCollection                   0             0
+ jdk.ZAllocationStall                        0             0
+ jdk.ZPageAllocation                         0             0
+ jdk.ZRelocationSet                          0             0
+ jdk.ZRelocationSetGroup                     0             0
+ jdk.ZStatisticsCounter                      0             0
+ jdk.ZStatisticsSampler                      0             0
+ jdk.ZThreadPhase                            0             0
+ jdk.ContainerConfiguration                  0             0
+ jdk.ZUncommit                               0             0
+ jdk.ZUnmap                                  0             0
+ jdk.ShenandoahHeapRegionStateChange         0             0
+ jdk.ShenandoahHeapRegionInformation         0             0
+ jdk.ContainerCPUUsage                       0             0
+ jdk.Flush                                   0             0
+ jdk.HeapDump                                0             0
+ jdk.ContainerCPUThrottling                  0             0
+ jdk.GCLocker                                0             0
+ jdk.FinalizerStatistics                     0             0
+ jdk.ContainerMemoryUsage                    0             0
+ jdk.JavaAgent                               0             0
+ jdk.NativeAgent                             0             0
+ jdk.ContainerIOUsage                        0             0
+ jdk.SecurityProviderService                 0             0
+ jdk.X509Validation                          0             0
+ jdk.ProcessStart                            0             0
+ jdk.Deserialization                         0             0
+
+🔥 ТОП ПОТОКОВ ПО CPU (детальная статистика):
+=============================================
+   1928   sampledThread = "DefaultDispatcher-worker-1" (javaThreadId = 85)
+    304   sampledThread = "G1 Conc#0" (osThreadId = 31285)
+    303   sampledThread = "G1 Conc#2" (osThreadId = 31335)
+    302   sampledThread = "G1 Conc#1" (osThreadId = 31334)
+    200   sampledThread = "AWT-EventQueue-0" (javaThreadId = 42)
+    170   sampledThread = "C2 CompilerThre" (osThreadId = 31296)
+    102   sampledThread = "TimerQueue" (javaThreadId = 106)
+     60   sampledThread = "DefaultDispatcher-worker-14" (javaThreadId = 387)
+     48   sampledThread = "GC Thread#9" (osThreadId = 31336)
+     48   sampledThread = "GC Thread#6" (osThreadId = 31331)
+     48   sampledThread = "GC Thread#4" (osThreadId = 31326)
+     48   sampledThread = "DefaultDispatcher-worker-7" (javaThreadId = 385)
+     47   sampledThread = "GC Thread#8" (osThreadId = 31333)
+     47   sampledThread = "GC Thread#7" (osThreadId = 31332)
+     47   sampledThread = "GC Thread#5" (osThreadId = 31327)
+     46   sampledThread = "GC Thread#3" (osThreadId = 31325)
+     44   sampledThread = "GC Thread#2" (osThreadId = 31301)
+     44   sampledThread = "GC Thread#1" (osThreadId = 31300)
+     44   sampledThread = "GC Thread#0" (osThreadId = 31283)
+     43   sampledThread = "DefaultDispatcher-worker-10" (javaThreadId = 378)
+     43   sampledThread = "C1 CompilerThre" (osThreadId = 31297)
+     42   sampledThread = "DefaultDispatcher-worker-29" (javaThreadId = 416)
+     39   sampledThread = "DefaultDispatcher-worker-6" (javaThreadId = 135)
+     37   sampledThread = "DefaultDispatcher-worker-20" (javaThreadId = 132)
+     29   sampledThread = "DefaultDispatcher-worker-17" (javaThreadId = 70)
+     26   sampledThread = "DefaultDispatcher-worker-30" (javaThreadId = 417)
+     25   sampledThread = "DefaultDispatcher-worker-28" (javaThreadId = 415)
+     21   sampledThread = "ApplicationImpl pooled thread 32" (javaThreadId = 389)
+     20   sampledThread = "DefaultDispatcher-worker-31" (javaThreadId = 418)
+     18   sampledThread = "DefaultDispatcher-worker-21" (javaThreadId = 383)
+
+🖼️  ДЕТАЛЬНЫЙ АНАЛИЗ AWT-EventQueue-0 (UI поток):
+================================================
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.writev() line: 0
+    ./usr/lib/libxcb.so.1.1.0() line: 0
+    sun.java2d.x11.XSurfaceData.isDrawableValid() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_wait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    javax.swing.plaf.basic.BasicTreeUI.getPathBounds(JTree, TreePath) line: 671
+    com.intellij.ui.tree.ui.DefaultTreeUI.getPathBounds(JTree, TreePath) line: 877
+    javax.swing.JTree.getPathBounds(TreePath) line: 2195
+    com.intellij.util.ui.tree.TreeUtil.getPathForLocation(JTree, int, int) line: 144
+    com.intellij.ide.dnd.aware.DnDAwareTree.isOverSelection(Point) line: 57
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    java.util.Hashtable.get(Object) line: 384
+    javax.swing.UIDefaults.getFromHashtable(Object) line: 183
+    javax.swing.UIDefaults.get(Object) line: 171
+    javax.swing.MultiUIDefaults.get(Object) line: 65
+    javax.swing.UIDefaults.getColor(Object) line: 452
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    java.util.Hashtable.get(Object) line: 384
+    javax.swing.UIDefaults.getFromHashtable(Object) line: 183
+    javax.swing.UIDefaults.get(Object) line: 171
+    javax.swing.MultiUIDefaults.get(Object) line: 59
+    javax.swing.UIManager.get(Object) line: 1014
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    kotlin.jvm.internal.Intrinsics.throwParameterIsNullNPE(String) line: 140
+    kotlin.jvm.internal.Intrinsics.checkNotNullParameter(Object, String) line: 131
+    com.intellij.serviceContainer.ComponentManagerImpl.getComponentAdapter$intellij_platform_serviceContainer(Class) line: 1278
+    com.intellij.serviceContainer.ComponentManagerImpl.getComponent(Class) line: 651
+    com.intellij.serviceContainer.ComponentManagerImpl.doGetService(Class, boolean) line: 752
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.ui.JBColor.namedColor(String, int, int) line: 122
+    com.intellij.util.ui.JBUI$CurrentTheme$ToolWindow.stripeSeparatorColor(boolean) line: 1141
+    com.intellij.openapi.wm.impl.StripeButtonSeparator.paintComponent(Graphics) line: 34
+    javax.swing.JComponent.paint(Graphics) line: 1124
+    javax.swing.JComponent.paintChildren(Graphics) line: 964
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    sun.java2d.loops.RenderCache$Key.equals(Object) line: 44
+    java.util.HashMap.getNode(Object) line: 578
+    java.util.LinkedHashMap.get(Object) line: 536
+    sun.java2d.loops.RenderCache.get(SurfaceType, CompositeType, SurfaceType) line: 66
+    sun.java2d.loops.Blit.getFromCache(SurfaceType, CompositeType, SurfaceType) line: 73
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    java.util.concurrent.ConcurrentHashMap.get(Object) line: 946
+    io.opentelemetry.sdk.metrics.internal.state.DefaultSynchronousMetricStorage.getAggregatorHandle(ConcurrentHashMap, Attributes, Context) line: 175
+    io.opentelemetry.sdk.metrics.internal.state.DefaultSynchronousMetricStorage.recordLong(long, Attributes, Context) line: 105
+    io.opentelemetry.sdk.metrics.SdkMeter$MultiWritableMetricStorage.recordLong(long, Attributes, Context) line: 345
+    io.opentelemetry.sdk.metrics.SdkLongCounter.add(long, Attributes, Context) line: 47
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.openapi.progress.impl.CoreProgressManager$$Lambda.0x00007ff7f7da27f8.compute() line: 0
+    com.intellij.openapi.progress.impl.CoreProgressManager.changePrioritizing(Computable) line: 876
+    com.intellij.openapi.progress.impl.CoreProgressManager.computePrioritized(ThrowableComputable) line: 869
+    com.intellij.ide.IdeEventQueue.dispatchEvent$lambda$12$lambda$11$lambda$10(ProgressManager, IdeEventQueue, AWTEvent) line: 312
+    com.intellij.ide.IdeEventQueue$$Lambda.0x00007ff7f7803188.invoke() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_wait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_wait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_wait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    libjvm.so.FastThreadsListHandle::FastThreadsListHandle() line: 0
+    libjvm.so.Unsafe_Unpark() line: 0
+    jdk.internal.misc.Unsafe.unpark(Object) line: 0
+    java.util.concurrent.locks.LockSupport.unpark(Thread) line: 181
+    kotlinx.coroutines.scheduling.CoroutineScheduler.tryUnpark() line: 492
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_wait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.concurrency.ThreadContext.installThreadContext(CoroutineContext, boolean) line: 291
+    com.intellij.util.concurrency.ChildContext.applyContextActions(boolean) line: 196
+    com.intellij.util.concurrency.ChildContext.applyContextActions$default(ChildContext, boolean, int, Object) line: 181
+    com.intellij.util.concurrency.ChildContext.runInChildContext(boolean, Function0) line: 172
+    com.intellij.util.concurrency.ChildContext.runInChildContext(Runnable) line: 167
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    jdk.internal.misc.Unsafe.park(boolean, long) line: 0
+    java.util.concurrent.locks.LockSupport.park() line: 371
+    ...
+
+⏰ ДЕТАЛЬНЫЙ АНАЛИЗ TimerQueue потока:
+====================================
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    libc.so.6.pthread_cond_signal() line: 0
+    libjvm.so.Unsafe_Unpark() line: 0
+    jdk.internal.misc.Unsafe.unpark(Object) line: 0
+    java.util.concurrent.locks.LockSupport.unpark(Thread) line: 181
+    java.util.concurrent.locks.AbstractQueuedSynchronizer.signalNext(AbstractQueuedSynchronizer$Node) line: 645
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    libjvm.so.AccessInternal::PostRuntimeDispatch<G1BarrierSet::AccessBarrier<1122404ul, G1BarrierSet>, (AccessInternal::BarrierType)2, 1122404ul>::oop_access_barrier() line: 0
+    libjvm.so.ScopeDesc::decode_scope_values() line: 0
+    libjvm.so.compiledVFrame::locals() line: 0
+    libjvm.so.JVM_GetStackAccessControlContext() line: 0
+    java.security.AccessController.getStackAccessControlContext() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    .itable stub() line: 0
+    com.intellij.ide.IdeEventQueue.doPostEvent(AWTEvent, boolean) line: 734
+    com.intellij.ide.IdeEventQueue.postEvent(AWTEvent) line: 727
+    java.awt.EventQueue.invokeLater(Runnable) line: 1326
+    javax.swing.SwingUtilities.invokeLater(Runnable) line: 1421
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    libc.so.6.pthread_cond_signal() line: 0
+    libjvm.so.Unsafe_Unpark() line: 0
+    jdk.internal.misc.Unsafe.unpark(Object) line: 0
+    java.util.concurrent.locks.LockSupport.unpark(Thread) line: 181
+    java.util.concurrent.locks.AbstractQueuedSynchronizer.signalNext(AbstractQueuedSynchronizer$Node) line: 645
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+
+🚀 ДЕТАЛЬНЫЙ АНАЛИЗ DefaultDispatcher потоков (Kotlin корутины):
+===============================================================
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.openapi.roots.SyntheticLibrary$ExcludeFileCondition$$Lambda.0x00007ff7f84bab80.value(Object) line: 0
+    com.goide.vgo.project.workspaceModel.roots.VgoDependencyWorkspaceFileIndexContributor.registerFileSets$lambda$2(Condition, VirtualFile) line: 34
+    com.goide.vgo.project.workspaceModel.roots.VgoDependencyWorkspaceFileIndexContributor$$Lambda.0x00007ff7fa726330.invoke(Object) line: 0
+    com.intellij.workspaceModel.core.fileIndex.impl.ExcludedFileSet$ByCondition.isExcluded(VirtualFile) line: 365
+    com.intellij.workspaceModel.core.fileIndex.impl.ExcludedFileSet$ByCondition.computeMasks(int, Project, boolean, VirtualFile) line: 375
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.util.containers.LockFreeCopyOnWriteArrayList.iterator() line: 757
+    com.intellij.openapi.fileTypes.impl.FileTypeAssocTable.findAssociatedFileType(CharSequence) line: 159
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.lambda$getFileTypeByFileName$11(CharSequence) line: 744
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl$$Lambda.0x00007ff7f7d93978.compute() line: 0
+    com.intellij.util.ConcurrencyUtil.withLock(Lock, ThrowableComputable) line: 277
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    java.lang.String.checkIndex(int, int) line: 4832
+    java.lang.StringLatin1.charAt(byte[], int) line: 46
+    java.lang.String.charAt(int) line: 1555
+    com.intellij.openapi.util.text.StringUtilRt.stringHashCodeInsensitive(CharSequence, int, int, int) line: 481
+    com.intellij.openapi.util.text.StringUtilRt.stringHashCodeInsensitive(CharSequence, int, int) line: 474
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt.createCoroutineUnintercepted(Function1, Continuation) line: 128
+    kotlin.coroutines.ContinuationKt.startCoroutine(Function1, Continuation) line: 115
+    com.intellij.platform.locking.impl.NestedLocksThreadingSupportKt.runSuspendWithWaitingConsumer(Function1, PermitWaitingInterceptor) line: 1471
+    com.intellij.platform.locking.impl.NestedLocksThreadingSupportKt.access$runSuspendWithWaitingConsumer(Function1, PermitWaitingInterceptor) line: 1
+    com.intellij.platform.locking.impl.NestedLocksThreadingSupport.runSuspendMaybeConsuming(boolean, Function1) line: 1439
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.workspaceModel.core.fileIndex.impl.WorkspaceFileSetImpl.isUnloaded(Project) line: 109
+    com.intellij.workspaceModel.core.fileIndex.impl.WorkspaceFileSetImpl.accepts(int, Project, VirtualFile) line: 128
+    com.intellij.workspaceModel.core.fileIndex.impl.WorkspaceFileSetImpl.computeMasks(int, Project, boolean, VirtualFile) line: 118
+    com.intellij.workspaceModel.core.fileIndex.impl.MultipleStoredWorkspaceFileSets.computeMasks(int, Project, boolean, VirtualFile) line: 237
+    com.intellij.workspaceModel.core.fileIndex.impl.WorkspaceFileIndexDataImpl.lambda 'addMeasuredTime' in getFileInfo#inline() line: 242
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    libjvm.so.CodeCache::find_blob() line: 0
+    libjvm.so.vframeStream::vframeStream() line: 0
+    libjvm.so.JVM_GetCallerClass() line: 0
+    jdk.internal.reflect.Reflection.getCallerClass() line: 0
+    java.lang.reflect.Field.setAccessible(boolean) line: 177
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    java.lang.String.checkIndex(int, int) line: 4832
+    java.lang.StringLatin1.charAt(byte[], int) line: 46
+    java.lang.String.charAt(int) line: 1555
+    com.intellij.openapi.util.text.StringUtilRt.stringHashCodeInsensitive(CharSequence, int, int, int) line: 481
+    com.intellij.openapi.util.text.StringUtilRt.stringHashCodeInsensitive(CharSequence, int, int) line: 474
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.openapi.vfs.newvfs.persistent.namecache.MRUFileNameCache.valueOf(int) line: 120
+    com.intellij.openapi.vfs.newvfs.persistent.namecache.MRUFileNameCache.valueOf(int) line: 23
+    com.intellij.openapi.vfs.newvfs.persistent.FSRecordsImpl.getName(int) line: 1186
+    com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl.getName(int) line: 2472
+    com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry.getNameSequence() line: 169
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    .itable stub() line: 0
+    kotlin.coroutines.CombinedContext.get(CoroutineContext$Key) line: 122
+    com.intellij.platform.locking.impl.NestedLocksThreadingSupport.getComputationState() line: 627
+    com.intellij.platform.locking.impl.NestedLocksThreadingSupport.runReadAction(Class, Function0) line: 768
+    com.intellij.openapi.application.impl.ApplicationImpl.runReadAction(Computable) line: 1024
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.workspaceModel.core.fileIndex.impl.ExcludedFileSet$ByCondition.computeMasks(int, Project, boolean, VirtualFile) line: 375
+    com.intellij.workspaceModel.core.fileIndex.impl.MultipleStoredWorkspaceFileSets.computeMasks(int, Project, boolean, VirtualFile) line: 237
+    com.intellij.workspaceModel.core.fileIndex.impl.WorkspaceFileIndexDataImpl.lambda 'addMeasuredTime' in getFileInfo#inline() line: 242
+    com.intellij.platform.diagnostic.telemetry.helpers.NanosecondsMeasurer.lambda 'measureNanoTime' in addMeasuredTime#inline() line: 44
+    kotlin.system.TimingKt.measureNanoTime#inline() line: 46
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.platform.locking.impl.NestedLocksThreadingSupport.runReadAction(Class, Function0) line: 766
+    com.intellij.openapi.application.impl.ApplicationImpl.runReadAction(Computable) line: 1024
+    com.intellij.openapi.application.ActionsKt.runReadAction(Function0) line: 25
+    com.intellij.util.indexing.roots.IndexableFilesIterationMethods.shouldIndexFile(VirtualFile, ProjectFileIndex, Set, boolean) line: 98
+    com.intellij.util.indexing.roots.IndexableFilesIterationMethods.iterateRoots$lambda$0(ProjectFileIndex, Set, boolean, VirtualFile) line: 32
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.openapi.fileTypes.impl.FileTypeAssocTable.findAssociatedFileType(CharSequence) line: 161
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.lambda$getFileTypeByFileName$12(CharSequence) line: 748
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl$$Lambda.0x00007ff7f7d93bc0.compute() line: 0
+    com.intellij.util.ConcurrencyUtil.withLock(Lock, ThrowableComputable) line: 277
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.withReadLock(ThrowableComputable) line: 1852
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.openapi.vfs.newvfs.persistent.namecache.MRUFileNameCache.valueOf(int) line: 120
+    com.intellij.openapi.vfs.newvfs.persistent.namecache.MRUFileNameCache.valueOf(int) line: 23
+    com.intellij.openapi.vfs.newvfs.persistent.FSRecordsImpl.getName(int) line: 1186
+    com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl.getName(int) line: 2472
+    com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry.getNameSequence() line: 169
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    .itable stub() line: 0
+    com.intellij.util.ConcurrencyUtil.withLock(Lock, ThrowableComputable) line: 277
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.withReadLock(ThrowableComputable) line: 1852
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.getFileTypeByFileName(CharSequence) line: 748
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.getFileTypeByFileName(String) line: 739
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.openapi.vfs.newvfs.persistent.namecache.MRUFileNameCache.valueOf(int) line: 120
+    com.intellij.openapi.vfs.newvfs.persistent.namecache.MRUFileNameCache.valueOf(int) line: 23
+    com.intellij.openapi.vfs.newvfs.persistent.FSRecordsImpl.getName(int) line: 1186
+    com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl.getName(int) line: 2472
+    com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry.getNameSequence() line: 169
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.workspaceModel.core.fileIndex.impl.MultipleStoredWorkspaceFileSets.computeMasks(int, Project, boolean, VirtualFile) line: 236
+    com.intellij.workspaceModel.core.fileIndex.impl.WorkspaceFileIndexDataImpl.lambda 'addMeasuredTime' in getFileInfo#inline() line: 242
+    com.intellij.platform.diagnostic.telemetry.helpers.NanosecondsMeasurer.lambda 'measureNanoTime' in addMeasuredTime#inline() line: 44
+    kotlin.system.TimingKt.measureNanoTime#inline() line: 46
+    com.intellij.platform.diagnostic.telemetry.helpers.NanosecondsMeasurer.addMeasuredTime-impl#inline() line: 44
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    java.lang.invoke.MethodHandle.invokeBasic(Object[]) line: 0
+    .unknown_Java() line: 0
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.util.containers.LockFreeCopyOnWriteArrayList.iterator() line: 757
+    com.intellij.openapi.fileTypes.impl.FileTypeAssocTable.findAssociatedFileType(CharSequence) line: 159
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.lambda$getFileTypeByFileName$11(CharSequence) line: 744
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl$$Lambda.0x00007ff7f7d93978.compute() line: 0
+    com.intellij.util.ConcurrencyUtil.withLock(Lock, ThrowableComputable) line: 277
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.workspaceModel.core.fileIndex.impl.WorkspaceFileSetImpl.isUnloaded(Project) line: 109
+    com.intellij.workspaceModel.core.fileIndex.impl.WorkspaceFileSetImpl.accepts(int, Project, VirtualFile) line: 128
+    com.intellij.workspaceModel.core.fileIndex.impl.WorkspaceFileIndexDataImpl.getFileInfo$lambda$4$lambda$3(int, WorkspaceFileIndexDataImpl, VirtualFile, ArrayList, StoredFileSet) line: 259
+    com.intellij.workspaceModel.core.fileIndex.impl.WorkspaceFileIndexDataImpl$$Lambda.0x00007ff7f8cf3d38.invoke(Object) line: 0
+    com.intellij.workspaceModel.core.fileIndex.impl.MultipleStoredWorkspaceFileSets.forEach(Function1) line: 244
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    java.lang.String.checkIndex(int, int) line: 4832
+    java.lang.StringLatin1.charAt(byte[], int) line: 46
+    java.lang.String.charAt(int) line: 1555
+    com.intellij.openapi.util.text.StringUtilRt.stringHashCodeInsensitive(CharSequence, int, int, int) line: 481
+    com.intellij.openapi.util.text.StringUtilRt.stringHashCodeInsensitive(CharSequence, int, int) line: 474
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.openapi.fileTypes.impl.FileTypeAssocTable.findAssociatedFileType(CharSequence) line: 161
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.lambda$getFileTypeByFileName$12(CharSequence) line: 748
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl$$Lambda.0x00007ff7f7d93bc0.compute() line: 0
+    com.intellij.util.ConcurrencyUtil.withLock(Lock, ThrowableComputable) line: 277
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.withReadLock(ThrowableComputable) line: 1852
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.concurrency.ConcurrentHashMap.get(Object) line: 923
+    com.intellij.openapi.fileTypes.impl.FileTypeAssocTable.findAssociatedFileType(CharSequence) line: 150
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.lambda$getFileTypeByFileName$12(CharSequence) line: 748
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl$$Lambda.0x00007ff7f7d93bc0.compute() line: 0
+    com.intellij.util.ConcurrencyUtil.withLock(Lock, ThrowableComputable) line: 277
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.openapi.roots.SyntheticLibrary$ExcludeFileCondition.lambda$transformToCondition$3(Collection, VirtualFile) line: 237
+    com.intellij.openapi.roots.SyntheticLibrary$ExcludeFileCondition$$Lambda.0x00007ff7f84bab80.value(Object) line: 0
+    com.intellij.workspaceModel.core.fileIndex.impl.NonIncrementalContributors.computeFileSets$lambda$24$lambda$23$lambda$21(Condition, VirtualFile) line: 166
+    com.intellij.workspaceModel.core.fileIndex.impl.NonIncrementalContributors$$Lambda.0x00007ff7f84bbb40.invoke(Object) line: 0
+    com.intellij.workspaceModel.core.fileIndex.impl.ExcludedFileSet$ByCondition.isExcluded(VirtualFile) line: 365
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.util.containers.LockFreeCopyOnWriteArrayList$COWIterator.<init>(LockFreeCopyOnWriteArrayList, Object[], int) line: 814
+    com.intellij.util.containers.LockFreeCopyOnWriteArrayList$COWIterator.<init>(LockFreeCopyOnWriteArrayList, Object[], int, LockFreeCopyOnWriteArrayList$1) line: 803
+    com.intellij.util.containers.LockFreeCopyOnWriteArrayList.iterator() line: 757
+    com.intellij.openapi.fileTypes.impl.FileTypeAssocTable.findAssociatedFileType(CharSequence) line: 159
+    com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl.lambda$getFileTypeByFileName$12(CharSequence) line: 748
+    ...
+  ]
+}
+
+
+=== STACK TRACE ===
+  stackTrace = [
+    com.intellij.openapi.util.text.StringsKmp.stringHashCode(CharSequence) line: 15
+    com.intellij.openapi.util.text.Strings.stringHashCode(CharSequence) line: 477
+
+🗑️  АНАЛИЗ GC потоков:
+=====================
+  ]
+}
+
+jdk.ExecutionSample {
+  startTime = 08:32:02.448 (2025-07-06)
+  sampledThread = "GC Thread#1" (osThreadId = 31300)
+  state = "STATE_RUNNABLE"
+  stackTrace = [
+    libjvm.so.G1ParScanThreadState::trim_queue_to_threshold() line: 0
+    libjvm.so.G1ScanHRForRegionClosure::scan_heap_roots() line: 0
+    libjvm.so.G1RemSet::scan_heap_roots() line: 0
+    libjvm.so.G1EvacuateRegionsTask::scan_roots() line: 0
+    libjvm.so.G1EvacuateRegionsBaseTask::work() line: 0
+    ...
+  ]
+}
+
+jdk.ExecutionSample {
+  startTime = 08:32:02.448 (2025-07-06)
+  sampledThread = "GC Thread#2" (osThreadId = 31301)
+  state = "STATE_RUNNABLE"
+  stackTrace = [
+    libjvm.so.void G1ScanCardClosure::do_oop_work<narrowOop>() line: 0
+    libjvm.so.void OopOopIterateDispatch<G1ScanCardClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop>() line: 0
+    libjvm.so.G1ScanHRForRegionClosure::scan_heap_roots() line: 0
+    libjvm.so.G1RemSet::scan_heap_roots() line: 0
+    libjvm.so.G1EvacuateRegionsTask::scan_roots() line: 0
+    ...
+  ]
+}
+
+jdk.ExecutionSample {
+  startTime = 08:32:02.449 (2025-07-06)
+  sampledThread = "GC Thread#6" (osThreadId = 31331)
+  state = "STATE_RUNNABLE"
+  stackTrace = [
+    libjvm.so.SpinPause() line: 0
+    libjvm.so.G1ParEvacuateFollowersClosure::do_void() line: 0
+    libjvm.so.G1EvacuateRegionsTask::evacuate_live_objects() line: 0
+    libjvm.so.G1EvacuateRegionsBaseTask::work() line: 0
+    libjvm.so.WorkerThread::run() line: 0
+    ...
+  ]
+}
+
+jdk.ExecutionSample {
+  startTime = 08:32:02.449 (2025-07-06)
+  sampledThread = "GC Thread#7" (osThreadId = 31332)
+  state = "STATE_RUNNABLE"
+  stackTrace = [
+    libjvm.so.ClassLoaderData::oops_do() line: 0
+    libjvm.so.G1CLDScanClosure::do_cld() line: 0
+    libjvm.so.ClassLoaderDataGraph::roots_cld_do() line: 0
+    libjvm.so.G1RootProcessor::process_java_roots() line: 0
+    libjvm.so.G1RootProcessor::evacuate_roots() line: 0
+    ...
+  ]
+}
+--
+  ]
+}
+
+jdk.ExecutionSample {
+  startTime = 08:32:04.190 (2025-07-06)
+  sampledThread = "GC Thread#3" (osThreadId = 31325)
+  state = "STATE_RUNNABLE"
+  stackTrace = [
+    libjvm.so.void WeakProcessor::Task::work<G1CMIsAliveClosure, DoNothingClosure>() line: 0
+    libjvm.so.WorkerThread::run() line: 0
+    libjvm.so.Thread::call_run() line: 0
+    libjvm.so.thread_native_entry() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    ...
+  ]
+}
+
+jdk.ExecutionSample {
+  startTime = 08:32:04.190 (2025-07-06)
+  sampledThread = "GC Thread#4" (osThreadId = 31326)
+  state = "STATE_RUNNABLE"
+  stackTrace = [
+    libjvm.so.void WeakProcessor::Task::work<G1CMIsAliveClosure, DoNothingClosure>() line: 0
+    libjvm.so.WorkerThread::run() line: 0
+    libjvm.so.Thread::call_run() line: 0
+    libjvm.so.thread_native_entry() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    ...
+  ]
+}
+
+jdk.ExecutionSample {
+  startTime = 08:32:04.190 (2025-07-06)
+  sampledThread = "GC Thread#5" (osThreadId = 31327)
+  state = "STATE_RUNNABLE"
+  stackTrace = [
+    libjvm.so.void WeakProcessor::Task::work<G1CMIsAliveClosure, DoNothingClosure>() line: 0
+    libjvm.so.WorkerThread::run() line: 0
+    libjvm.so.Thread::call_run() line: 0
+    libjvm.so.thread_native_entry() line: 0
+    ./usr/lib/libc.so.6() line: 0
+
+🗑️  СОБЫТИЯ СБОРКИ МУСОРА:
+=========================
+
+💾 АНАЛИЗ АЛЛОКАЦИЙ ПАМЯТИ:
+===========================
+jdk.ObjectAllocationSample {
+  startTime = 11:32:01.635 (2025-07-06)
+  objectClass = java.util.HashMap$KeyIterator (classLoader = bootstrap)
+  weight = 23.8 MB
+  eventThread = "ApplicationImpl pooled thread 32" (javaThreadId = 389)
+  stackTrace = [
+    java.util.HashMap$KeySet.iterator() line: 991
+    java.util.HashSet.iterator() line: 182
+    jdk.jfr.internal.Control.findCombine(Set) line: 151
+    jdk.jfr.internal.Control.apply(Set) line: 64
+    jdk.jfr.internal.SettingsManager.setEventControl(EventControl, boolean, long) line: 229
+    ...
+  ]
+}
+
+jdk.ObjectAllocationSample {
+  startTime = 11:32:01.636 (2025-07-06)
+  objectClass = java.util.HashMap$KeyIterator (classLoader = bootstrap)
+  weight = 2.0 kB
+  eventThread = "ApplicationImpl pooled thread 32" (javaThreadId = 389)
+  stackTrace = [
+    java.util.HashMap$KeySet.iterator() line: 991
+    java.util.HashSet.iterator() line: 182
+    jdk.jfr.internal.Control.findCombine(Set) line: 151
+    jdk.jfr.internal.Control.apply(Set) line: 64
+    jdk.jfr.internal.SettingsManager.setEventControl(EventControl, boolean, long) line: 229
+    ...
+  ]
+}
+
+jdk.ObjectAllocationSample {
+  startTime = 11:32:01.636 (2025-07-06)
+  objectClass = java.util.HashMap$KeyIterator (classLoader = bootstrap)
+  weight = 2.0 kB
+  eventThread = "ApplicationImpl pooled thread 32" (javaThreadId = 389)
+  stackTrace = [
+    java.util.HashMap$KeySet.iterator() line: 991
+    java.util.HashSet.iterator() line: 182
+    jdk.jfr.internal.Control.findCombine(Set) line: 151
+    jdk.jfr.internal.Control.apply(Set) line: 64
+    jdk.jfr.internal.SettingsManager.setEventControl(EventControl, boolean, long) line: 229
+    ...
+  ]
+}
+
+jdk.ObjectAllocationSample {
+  startTime = 11:32:01.636 (2025-07-06)
+  objectClass = java.util.HashMap$KeyIterator (classLoader = bootstrap)
+  weight = 2.0 kB
+  eventThread = "ApplicationImpl pooled thread 32" (javaThreadId = 389)
+
+📈 АНАЛИЗ ЗАГРУЗКИ CPU:
+======================
+jdk.CPULoad {
+  startTime = 08:32:01.647 (2025-07-06)
+  jvmUser = 12.50%
+  jvmSystem = 0.00%
+  machineTotal = 30.77%
+}
+
+jdk.CPULoad {
+  startTime = 08:32:01.747 (2025-07-06)
+  jvmUser = 15.00%
+  jvmSystem = 2.50%
+  machineTotal = 19.01%
+}
+
+jdk.CPULoad {
+  startTime = 08:32:01.847 (2025-07-06)
+  jvmUser = 10.00%
+  jvmSystem = 0.00%
+  machineTotal = 10.00%
+}
+
+jdk.CPULoad {
+  startTime = 08:32:01.947 (2025-07-06)
+  jvmUser = 10.83%
+  jvmSystem = 0.00%
+  machineTotal = 10.83%
+}
+
+jdk.CPULoad {
+  startTime = 08:32:02.047 (2025-07-06)
+  jvmUser = 10.00%
+  jvmSystem = 0.83%
+  machineTotal = 10.83%
+}
+
+jdk.CPULoad {
+  startTime = 08:32:02.147 (2025-07-06)
+  jvmUser = 10.00%
+  jvmSystem = 0.00%
+  machineTotal = 10.00%
+}
+
+jdk.CPULoad {
+  startTime = 08:32:02.247 (2025-07-06)
+  jvmUser = 10.00%
+  jvmSystem = 0.83%
+  machineTotal = 10.83%
+}
+
+jdk.CPULoad {
+
+⚡ АНАЛИЗ JIT КОМПИЛЯЦИИ:
+========================
+
+🔒 АНАЛИЗ БЛОКИРОВОК (JavaMonitorEnter):
+=======================================
+
+😴 АНАЛИЗ WAITING/BLOCKED потоков:
+==================================
+
+💥 АНАЛИЗ ИСКЛЮЧЕНИЙ:
+===================
+
+📁 АНАЛИЗ ФАЙЛОВЫХ ОПЕРАЦИЙ:
+============================
+
+
+🌐 АНАЛИЗ СЕТЕВЫХ ОПЕРАЦИЙ:
+===========================
+
+
+📊 СТАТИСТИКА ПО ТИПАМ СОБЫТИЙ:
+===============================
+  13625 jdk.ObjectAllocationSample {
+   6419 profiler.WallClockSleeping {
+   4464 jdk.ExecutionSample {
+    504 jdk.CPULoad {
+    236 jdk.NativeLibrary {
+     51 jdk.GCHeapMemoryUsage {
+     46 jdk.InitialSystemProperty {
+     44 jdk.G1HeapSummary {
+     29 jdk.GCHeapSummary {
+     25 jdk.ActiveSetting {
+      1 uname: Linux 6.15.3-1-MANJARO #1 SMP PREEMPT_DYNAMIC Thu, 19 Jun 2025 15:49:42 +0000 x86_64
+      1 libc: glibc 2.41 NPTL 2.41 
+      1 jdk.OSInformation {
+      1 jdk.JVMInformation {
+      1 jdk.CPUInformation {
+      1 jdk.ActiveRecording {
+
+📋 ВСЕ ДОСТУПНЫЕ СОБЫТИЯ В ПРОФИЛЕ:
+==================================
+libc: glibc 2.41 NPTL 2.41 
+uname: Linux 6.15.3-1-MANJARO #1 SMP PREEMPT_DYNAMIC Thu, 19 Jun 2025 15:49:42 +0000 x86_64
+

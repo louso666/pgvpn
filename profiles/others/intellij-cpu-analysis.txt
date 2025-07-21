@@ -1,0 +1,565 @@
+🔍 Детальный анализ профиля IntelliJ IDEA
+=======================================
+Файл: IU-252.23591.19_tema_06.07.2025_10.16.01.jfr
+Дата анализа: Вс 06 июл 2025 10:22:23 EEST
+
+📊 ОБЩАЯ СВОДКА:
+
+ Version: 2.0
+ Chunks: 2
+ Start: 2025-07-06 07:14:33 (UTC)
+ Duration: 175 s
+
+ Event Type                              Count  Size (bytes) 
+=============================================================
+ profiler.WallClockSleeping               4570         91518
+ jdk.ExecutionSample                      2090         31905
+ jdk.CPULoad                               876         18396
+ jdk.ObjectAllocationSample                771         13155
+ profiler.UserEvent                        256         15977
+ jdk.Checkpoint                            244        964824
+ jdk.GCHeapMemoryUsage                      87          2088
+ jdk.ObjectAllocationInNewTLAB              46          6048
+ jdk.ActiveSetting                          25           834
+ jdk.Metadata                                2        111470
+ jdk.JVMInformation                          1          4646
+ jdk.OSInformation                           1           247
+ jdk.ThreadPark                              1          1746
+ jdk.ActiveRecording                         1            75
+ jdk.ResidentSetSize                         0             0
+ jdk.ThreadStart                             0             0
+ jdk.ThreadEnd                               0             0
+ jdk.ThreadPark                              0             0
+ jdk.JavaMonitorEnter                        0             0
+ jdk.JavaMonitorWait                         0             0
+ jdk.JavaMonitorInflate                      0             0
+ jdk.SyncOnValueBasedClass                   0             0
+ jdk.ContinuationFreeze                      0             0
+ jdk.ContinuationThaw                        0             0
+ jdk.ContinuationFreezeFast                  0             0
+ jdk.ContinuationFreezeSlow                  0             0
+ jdk.ContinuationThawFast                    0             0
+ jdk.ContinuationThawSlow                    0             0
+ jdk.ReservedStackActivation                 0             0
+ jdk.ClassLoad                               0             0
+ jdk.ClassDefine                             0             0
+ jdk.ClassRedefinition                       0             0
+ jdk.RedefineClasses                         0             0
+ jdk.RetransformClasses                      0             0
+ jdk.ClassUnload                             0             0
+ jdk.IntFlagChanged                          0             0
+ jdk.UnsignedIntFlagChanged                  0             0
+ jdk.LongFlagChanged                         0             0
+ jdk.UnsignedLongFlagChanged                 0             0
+ jdk.DoubleFlagChanged                       0             0
+ jdk.BooleanFlagChanged                      0             0
+ jdk.StringFlagChanged                       0             0
+ jdk.GCHeapSummary                           0             0
+ jdk.GCHeapMemoryPoolUsage                   0             0
+ jdk.MetaspaceSummary                        0             0
+ jdk.MetaspaceGCThreshold                    0             0
+ jdk.MetaspaceAllocationFailure              0             0
+ jdk.MetaspaceOOM                            0             0
+ jdk.MetaspaceChunkFreeListSummary           0             0
+ jdk.PSHeapSummary                           0             0
+ jdk.G1HeapSummary                           0             0
+ jdk.GarbageCollection                       0             0
+ jdk.SystemGC                                0             0
+ jdk.ParallelOldGarbageCollection            0             0
+ jdk.YoungGarbageCollection                  0             0
+ jdk.OldGarbageCollection                    0             0
+ jdk.G1GarbageCollection                     0             0
+ jdk.G1MMU                                   0             0
+ jdk.EvacuationInformation                   0             0
+ jdk.GCReferenceStatistics                   0             0
+ jdk.ObjectCountAfterGC                      0             0
+ jdk.G1EvacuationYoungStatistics             0             0
+ jdk.G1EvacuationOldStatistics               0             0
+ jdk.G1BasicIHOP                             0             0
+ jdk.G1AdaptiveIHOP                          0             0
+ jdk.PromoteObjectInNewPLAB                  0             0
+ jdk.PromoteObjectOutsidePLAB                0             0
+ jdk.PromotionFailed                         0             0
+ jdk.EvacuationFailed                        0             0
+ jdk.ConcurrentModeFailure                   0             0
+ jdk.FileForce                               0             0
+ jdk.GCCPUTime                               0             0
+ jdk.GCPhasePause                            0             0
+ jdk.FileRead                                0             0
+ jdk.GCPhasePauseLevel1                      0             0
+ jdk.SecurityProviderService                 0             0
+ jdk.GCPhasePauseLevel2                      0             0
+ jdk.FileWrite                               0             0
+ jdk.GCPhasePauseLevel3                      0             0
+ jdk.GCPhasePauseLevel4                      0             0
+ jdk.SocketRead                              0             0
+ jdk.GCPhaseConcurrent                       0             0
+ jdk.GCPhaseConcurrentLevel1                 0             0
+ jdk.SocketWrite                             0             0
+ jdk.GCPhaseConcurrentLevel2                 0             0
+ jdk.GCPhaseParallel                         0             0
+ jdk.JavaExceptionThrow                      0             0
+ jdk.AllocationRequiringGC                   0             0
+ jdk.TenuringDistribution                    0             0
+ jdk.ExceptionStatistics                     0             0
+ jdk.G1HeapRegionTypeChange                  0             0
+ jdk.JITRestart                              0             0
+ jdk.JavaErrorThrow                          0             0
+ jdk.Compilation                             0             0
+ jdk.CompilerPhase                           0             0
+ jdk.ActiveSetting                           0             0
+ jdk.CompilationFailure                      0             0
+ jdk.CompilerInlining                        0             0
+ jdk.ActiveRecording                         0             0
+ jdk.CodeCacheFull                           0             0
+ jdk.Deoptimization                          0             0
+ jdk.SecurityPropertyModification            0             0
+ jdk.SafepointBegin                          0             0
+ jdk.SafepointStateSynchronization           0             0
+ jdk.VirtualThreadStart                      0             0
+ jdk.SafepointCleanup                        0             0
+ jdk.SafepointCleanupTask                    0             0
+ jdk.VirtualThreadEnd                        0             0
+ jdk.X509Certificate                         0             0
+ jdk.SafepointEnd                            0             0
+ jdk.ExecuteVMOperation                      0             0
+ jdk.VirtualThreadPinned                     0             0
+ jdk.Shutdown                                0             0
+ jdk.ObjectAllocationInNewTLAB               0             0
+ jdk.VirtualThreadSubmitFailed               0             0
+ jdk.ObjectAllocationOutsideTLAB             0             0
+ jdk.OldObjectSample                         0             0
+ jdk.NativeMemoryUsage                       0             0
+ jdk.NativeMemoryUsageTotal                  0             0
+ jdk.DirectBufferStatistics                  0             0
+ jdk.DumpReason                              0             0
+ jdk.DataLoss                                0             0
+ jdk.InitialSecurityProperty                 0             0
+ jdk.X509Validation                          0             0
+ jdk.ObjectAllocationOutsideTLAB             0             0
+ jdk.JavaMonitorEnter                        0             0
+ jdk.OSInformation                           0             0
+ jdk.CPUInformation                          0             0
+ jdk.JVMInformation                          0             0
+ jdk.InitialSystemProperty                   0             0
+ jdk.NativeLibrary                           0             0
+ jdk.GCHeapSummary                           0             0
+ profiler.Log                                0             0
+ profiler.Window                             0             0
+ profiler.LiveObject                         0             0
+ profiler.WallClockSample                    0             0
+ profiler.Malloc                             0             0
+ profiler.Free                               0             0
+ jdk.ModuleRequire                           0             0
+ jdk.ModuleExport                            0             0
+ jdk.CompilerStatistics                      0             0
+ jdk.CompilerConfiguration                   0             0
+ jdk.CodeCacheStatistics                     0             0
+ jdk.IntFlag                                 0             0
+ jdk.UnsignedIntFlag                         0             0
+ jdk.LongFlag                                0             0
+ jdk.UnsignedLongFlag                        0             0
+ jdk.DoubleFlag                              0             0
+ jdk.BooleanFlag                             0             0
+ jdk.StringFlag                              0             0
+ jdk.ObjectCount                             0             0
+ jdk.G1HeapRegionInformation                 0             0
+ jdk.GCConfiguration                         0             0
+ jdk.GCSurvivorConfiguration                 0             0
+ jdk.GCTLABConfiguration                     0             0
+ jdk.GCHeapConfiguration                     0             0
+ jdk.YoungGenerationConfiguration            0             0
+ jdk.ZYoungGarbageCollection                 0             0
+ jdk.ZOldGarbageCollection                   0             0
+ jdk.ZAllocationStall                        0             0
+ jdk.ZPageAllocation                         0             0
+ jdk.ZRelocationSet                          0             0
+ jdk.ZRelocationSetGroup                     0             0
+ jdk.ZStatisticsCounter                      0             0
+ jdk.ZStatisticsSampler                      0             0
+ jdk.ZThreadPhase                            0             0
+ jdk.ZUncommit                               0             0
+ jdk.ZUnmap                                  0             0
+ jdk.ShenandoahHeapRegionStateChange         0             0
+ jdk.ShenandoahHeapRegionInformation         0             0
+ jdk.Flush                                   0             0
+ jdk.HeapDump                                0             0
+ jdk.GCLocker                                0             0
+ jdk.FinalizerStatistics                     0             0
+ jdk.ThreadSleep                             0             0
+ jdk.JavaAgent                               0             0
+ jdk.NativeAgent                             0             0
+ jdk.ContainerConfiguration                  0             0
+ jdk.ContainerCPUUsage                       0             0
+ jdk.ContainerCPUThrottling                  0             0
+ jdk.ContainerMemoryUsage                    0             0
+ jdk.ContainerIOUsage                        0             0
+ jdk.Deserialization                         0             0
+ jdk.TLSHandshake                            0             0
+ jdk.ProcessStart                            0             0
+
+🔥 ТОП ПОТОКОВ ПО CPU (семплы):
+    424   sampledThread = "AWT-EventQueue-0" (javaThreadId = 39)
+    245   sampledThread = "TimerQueue" (javaThreadId = 103)
+    233   sampledThread = "C2 CompilerThre" (osThreadId = 2552)
+     78   sampledThread = "DefaultDispatcher-worker-3" (javaThreadId = 898)
+     72   sampledThread = "DefaultDispatcher-worker-4" (javaThreadId = 822)
+     64   sampledThread = "DefaultDispatcher-worker-23" (javaThreadId = 909)
+     60   sampledThread = "DefaultDispatcher-worker-21" (javaThreadId = 893)
+     60   sampledThread = "DefaultDispatcher-worker-1" (javaThreadId = 912)
+     57   sampledThread = "DefaultDispatcher-worker-15" (javaThreadId = 752)
+     55   sampledThread = "DefaultDispatcher-worker-16" (javaThreadId = 900)
+     52   sampledThread = "DefaultDispatcher-worker-10" (javaThreadId = 904)
+     50   sampledThread = "DefaultDispatcher-worker-12" (javaThreadId = 753)
+     47   sampledThread = "DefaultDispatcher-worker-6" (javaThreadId = 788)
+     47   sampledThread = "DefaultDispatcher-worker-19" (javaThreadId = 899)
+     46   sampledThread = "DefaultDispatcher-worker-11" (javaThreadId = 775)
+
+🖼️  АНАЛИЗ AWT-EventQueue-0 (UI поток):
+Этот поток жрал больше всего CPU! Примеры стеков:
+---
+    libjvm.so.CodeHeap::find_blob() line: 0
+    libjvm.so.JVM_GetStackAccessControlContext() line: 0
+    java.security.AccessController.getStackAccessControlContext() line: 0
+    java.security.AccessController.getContext() line: 1006
+    java.awt.EventQueue.dispatchEvent(AWTEvent) line: 744
+    ...
+  ]
+}
+
+---
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pread() line: 0
+    libnio.so.Java_sun_nio_ch_UnixFileDispatcherImpl_pread0() line: 0
+    sun.nio.ch.UnixFileDispatcherImpl.pread0(FileDescriptor, long, int, long) line: 0
+    ...
+  ]
+}
+
+---
+    javax.swing.JComponent.computeVisibleRect(Component, Rectangle) line: 4537
+    javax.swing.JComponent.computeVisibleRect(Component, Rectangle) line: 4540
+    javax.swing.JComponent.computeVisibleRect(Component, Rectangle) line: 4540
+    javax.swing.JComponent.computeVisibleRect(Component, Rectangle) line: 4540
+    javax.swing.JComponent.computeVisibleRect(Component, Rectangle) line: 4540
+    ...
+  ]
+}
+
+---
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_wait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+---
+    libjvm.so.AccessInternal::PostRuntimeDispatch<G1BarrierSet::AccessBarrier<286822ul, G1BarrierSet>, (AccessInternal::BarrierType)1, 286822ul>::oop_access_barrier() line: 0
+    libjvm.so.JVM_GetStackAccessControlContext() line: 0
+    java.security.AccessController.getStackAccessControlContext() line: 0
+    java.security.AccessController.getContext() line: 1006
+    java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(PrivilegedAction, AccessControlContext) line: 99
+    ...
+  ]
+}
+
+---
+    kotlinx.coroutines.CoroutineDispatcher.isDispatchNeeded(CoroutineContext) line: 97
+    kotlinx.coroutines.internal.DispatchedContinuationKt.safeIsDispatchNeeded(CoroutineDispatcher, CoroutineContext) line: 262
+    kotlinx.coroutines.DispatchedTaskKt.dispatch(DispatchedTask, int) line: 144
+    kotlinx.coroutines.CancellableContinuationImpl.dispatchResume(int) line: 470
+    kotlinx.coroutines.CancellableContinuationImpl.lambda 'loop$atomicfu$ATOMIC_FIELD_UPDATER$Any' in resumeImpl#inline() line: 504
+    ...
+  ]
+}
+
+---
+    java.lang.ThreadLocal$ThreadLocalMap.set(ThreadLocal, Object) line: 558
+    java.lang.ThreadLocal.set(Thread, Object) line: 265
+    java.lang.ThreadLocal.set(Object) line: 251
+    com.intellij.platform.locking.impl.NestedLocksThreadingSupport.doRunWriteIntentReadAction(Function0) line: 648
+    com.intellij.platform.locking.impl.NestedLocksThreadingSupport.runPreventiveWriteIntentReadAction(Function0) line: 640
+    ...
+  ]
+}
+
+---
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_wait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+---
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_wait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+---
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_wait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+
+⏰ АНАЛИЗ TimerQueue потока:
+Второй по потреблению CPU поток! Примеры стеков:
+---
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+---
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+---
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+---
+    libjvm.so.JVM_GetStackAccessControlContext() line: 0
+    java.security.AccessController.getStackAccessControlContext() line: 0
+    java.security.AccessController.getContext() line: 1006
+    java.awt.AWTEvent.<init>(Object, int) line: 120
+    java.awt.event.InvocationEvent.<init>(Object, int, Runnable, Object, Runnable, boolean) line: 291
+    ...
+  ]
+}
+
+---
+    libjvm.so.RegisterMap::RegisterMap() line: 0
+    libjvm.so.compiledVFrame::at_scope() line: 0
+    libjvm.so.vframeStreamCommon::asJavaVFrame() line: 0
+    libjvm.so.JVM_GetStackAccessControlContext() line: 0
+    java.security.AccessController.getStackAccessControlContext() line: 0
+    ...
+  ]
+}
+
+---
+    libjvm.so.vframeStreamCommon::next() line: 0
+    libjvm.so.JVM_GetStackAccessControlContext() line: 0
+    java.security.AccessController.getStackAccessControlContext() line: 0
+    java.security.AccessController.getContext() line: 1006
+    java.awt.AWTEvent.<init>(Object, int) line: 120
+    ...
+  ]
+}
+
+---
+    java.security.AccessController.ensureMaterializedForStackWalk(Object) line: 0
+    java.security.AccessController.executePrivileged(PrivilegedAction, AccessControlContext, Class) line: 774
+    java.security.AccessController.doPrivileged(PrivilegedAction, AccessControlContext) line: 400
+    javax.swing.Timer.post() line: 615
+    javax.swing.TimerQueue.run() line: 177
+    ...
+  ]
+}
+
+---
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+---
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+---
+    com.intellij.util.containers.LockFreeCopyOnWriteArrayList.iterator() line: 757
+    com.intellij.ide.IdeEventQueue.doPostEvent(AWTEvent, boolean) line: 733
+    com.intellij.ide.IdeEventQueue.postEvent(AWTEvent) line: 727
+    java.awt.EventQueue.invokeLater(Runnable) line: 1326
+    javax.swing.SwingUtilities.invokeLater(Runnable) line: 1421
+    ...
+  ]
+}
+
+
+🚀 АНАЛИЗ DefaultDispatcher потоков (Kotlin корутины):
+  sampledThread = "DefaultDispatcher-worker-12" (javaThreadId = 753)
+  sampledThread = "DefaultDispatcher-worker-4" (javaThreadId = 822)
+  sampledThread = "DefaultDispatcher-worker-4" (javaThreadId = 822)
+  sampledThread = "DefaultDispatcher-worker-TERMINATED" (javaThreadId = 849)
+  sampledThread = "DefaultDispatcher-worker-20" (javaThreadId = 776)
+  sampledThread = "DefaultDispatcher-worker-4" (javaThreadId = 822)
+  sampledThread = "DefaultDispatcher-worker-16" (javaThreadId = 900)
+  sampledThread = "DefaultDispatcher-worker-12" (javaThreadId = 753)
+  sampledThread = "DefaultDispatcher-worker-13" (javaThreadId = 895)
+  sampledThread = "DefaultDispatcher-worker-9" (javaThreadId = 761)
+  sampledThread = "DefaultDispatcher-worker-9" (javaThreadId = 761)
+  sampledThread = "DefaultDispatcher-worker-6" (javaThreadId = 788)
+  sampledThread = "DefaultDispatcher-worker-16" (javaThreadId = 900)
+  sampledThread = "DefaultDispatcher-worker-16" (javaThreadId = 900)
+  sampledThread = "DefaultDispatcher-worker-1" (javaThreadId = 912)
+  sampledThread = "DefaultDispatcher-worker-18" (javaThreadId = 537)
+  sampledThread = "DefaultDispatcher-worker-12" (javaThreadId = 753)
+  sampledThread = "DefaultDispatcher-worker-6" (javaThreadId = 788)
+  sampledThread = "DefaultDispatcher-worker-13" (javaThreadId = 895)
+  sampledThread = "DefaultDispatcher-worker-TERMINATED" (javaThreadId = 849)
+
+😴 АНАЛИЗ спящих потоков (WallClockSleeping):
+profiler.WallClockSleeping {
+  startTime = 07:14:33.531 (2025-07-06)
+  samplesCount = 1
+  eventThread = "TimerQueue" (javaThreadId = 103)
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_timedwait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+profiler.WallClockSleeping {
+  startTime = 07:14:33.529 (2025-07-06)
+  duration = 10.0 ms
+  samplesCount = 2
+  eventThread = "AWT-EventQueue-0" (javaThreadId = 39)
+  stackTrace = [
+    ./usr/lib/libc.so.6() line: 0
+    ./usr/lib/libc.so.6() line: 0
+    libc.so.6.pthread_cond_wait() line: 0
+    libjvm.so.Parker::park() line: 0
+    libjvm.so.Unsafe_Park() line: 0
+    ...
+  ]
+}
+
+profiler.WallClockSleeping {
+
+💾 АНАЛИЗ аллокаций памяти:
+jdk.ObjectAllocationSample {
+  startTime = 10:14:33.526 (2025-07-06)
+  objectClass = byte[] (classLoader = bootstrap)
+  weight = 17.3 MB
+  eventThread = "ApplicationImpl pooled thread 88" (javaThreadId = 926)
+  stackTrace = [
+    java.util.Arrays.copyOfRangeByte(byte[], int, int) line: 3863
+    java.util.Arrays.copyOfRange(byte[], int, int) line: 3854
+    java.lang.StringLatin1.newString(byte[], int, int) line: 752
+    java.lang.String.substring(int, int) line: 2839
+    jdk.jfr.internal.Utils.parseTimespan(String) line: 315
+    ...
+  ]
+}
+
+jdk.ObjectAllocationSample {
+  startTime = 10:14:33.531 (2025-07-06)
+  objectClass = sun.nio.fs.UnixException (classLoader = bootstrap)
+  weight = 1.4 kB
+  eventThread = "FileSystemWatchService" (javaThreadId = 235)
+
+📈 АНАЛИЗ загрузки CPU:
+  jvmUser = 16.67%
+  jvmSystem = 0.00%
+  machineTotal = 16.67%
+  jvmUser = 9.17%
+  jvmSystem = 0.83%
+  machineTotal = 10.00%
+  jvmUser = 8.33%
+  jvmSystem = 1.67%
+  machineTotal = 10.26%
+  jvmUser = 9.17%
+  jvmSystem = 0.83%
+  machineTotal = 10.00%
+  jvmUser = 7.50%
+  jvmSystem = 2.50%
+  machineTotal = 10.53%
+  jvmUser = 5.83%
+  jvmSystem = 3.33%
+  machineTotal = 13.91%
+  jvmUser = 5.83%
+  jvmSystem = 1.67%
+
+🚨 ДИАГНОЗ И РЕКОМЕНДАЦИИ:
+=========================
+
+ОСНОВНЫЕ ПРОБЛЕМЫ:
+1. AWT-EventQueue-0 поток слишком активен в простое (424 семпла)
+   - Возможная причина: постоянная перерисовка UI компонентов
+   - Рекомендация: отключить анимации, проверить UI плагины
+
+2. TimerQueue поток жрет CPU (245 семплов)
+   - Возможная причина: слишком частые таймеры Swing
+   - Рекомендация: увеличить интервалы обновления UI
+
+3. Много корутин DefaultDispatcher (суммарно ~700+ семплов)
+   - Возможная причина: фоновые задачи плагинов
+   - Рекомендация: отключить неиспользуемые плагины
+
+4. C2 JIT компилятор активен (233 семпла)
+   - Это нормально при запуске, но не в простое
+   - Рекомендация: увеличить -Xmx память
+
+🎯 КОНКРЕТНЫЕ ДЕЙСТВИЯ:
+=====================
+
+1. ОТКЛЮЧИТЬ АНИМАЦИИ И ЭФФЕКТЫ:
+   Settings → Appearance → UI Options → отключить анимации
+
+2. ОТКЛЮЧИТЬ ПРОБЛЕМНЫЕ ПЛАГИНЫ:
+   Settings → Plugins → отключить неиспользуемые
+   Особенно: AI Assistant, GitHub Copilot (если не нужен)
+
+3. НАСТРОИТЬ JVM ОПЦИИ (Help → Edit Custom VM Options):
+   -Xms4g
+   -Xmx8g
+   -XX:+UseG1GC
+   -XX:MaxGCPauseMillis=200
+   -XX:+DisableExplicitGC
+
+4. ИСКЛЮЧИТЬ ПАПКИ ИЗ ИНДЕКСАЦИИ:
+   Settings → Project → Directories → Mark as Excluded
+   Исключить: node_modules, .git, target, build, dist
+
+5. ОТКЛЮЧИТЬ СТАТИСТИКУ:
+   Settings → Data Sharing → отключить все
+
