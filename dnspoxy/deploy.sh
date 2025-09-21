@@ -3,7 +3,7 @@ set -euo pipefail
 
 BIN=dnspoxy                # имя бинаря после билда
 SERVICE=dnspoxy.service    # имя unit‑файла
-TARGET=root@176.114.88.142   # куда катим
+TARGET=root@89.253.219.146   # куда катим
 REMOTE_BIN_DIR=/usr/local/bin
 REMOTE_SERVICE_DIR=/etc/systemd/system
 

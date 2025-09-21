@@ -18,8 +18,8 @@ import (
 )
 
 const (
-	botToken = "8153937790:AAE49qW06omMZs5yc5VzOCv3bpmwHe_zaqk"
-	password = "xnbdjxnbdj"
+	botToken = "1481492430:AAHvpDUOG67c0QLFtZrhvKGBqBPJf2K8qV0"
+	password = "_Texxi155775"
 	dbPath   = "/root/bot.db"
 	// Файлы для паттернов по типам маршрутизации
 	patternFileDE  = "/root/site"     // для Германии (de) - обратная совместимость
