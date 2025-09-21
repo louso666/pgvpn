@@ -12,7 +12,7 @@ ExecStartPre=-/usr/sbin/ip tunnel del gre-p2p
 
 # --- СОЗДАЁМ ---
 # ПРАВЬ local/remote и адрес внутри для каждой стороны!
-ExecStart=/usr/sbin/ip tunnel add gre-p2p mode gre local 159.69.33.152 remote 176.114.88.142 ttl 255
+ExecStart=/usr/sbin/ip tunnel add gre-p2p mode gre local 77.238.252.171 remote 89.253.219.146 ttl 255
 ExecStart=/usr/sbin/ip link set gre-p2p mtu 1476 up
 ExecStart=/usr/sbin/ip addr add 10.24.0.2/30 dev gre-p2p
 

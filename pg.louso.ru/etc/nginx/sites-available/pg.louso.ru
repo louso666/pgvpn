@@ -6,10 +6,10 @@ server {
 
 server {
     listen 443 ssl http2;
-    server_name pg.gena.host;
+    server_name pg.louso.ru;
     
-    ssl_certificate /etc/letsencrypt/live/pg.gena.host/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/pg.gena.host/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/pg.louso.ru/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/pg.louso.ru/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
     
