@@ -1,0 +1,13 @@
+[Unit]
+Description=Настройка IP Tunnel tun10
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/setup-tun10.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+
