@@ -165,7 +165,7 @@ Always commit changes in Git before or after pushing, so the repository reflects
 Домашний и дачный MikroTik должны отправлять только те IP, которые бот относит к NL/USA, через туннели `wg-home`/`wg-dacha`. Для этого используем `ip firewall address-list` + `mangle` → `mark-routing`. Выгрузкой ipset занимается таймер на `pg.louso.ru`.
 
 ### Сервер (pg.louso.ru)
-1. Проверьте конфиг `/etc/pgvpn/mikrotik-sync.conf` (есть шаблон в репо). Впишите реальные `ROUTER_*` параметры и при необходимости ключи алгоритмов.
+1. Проверьте конфиг `/etc/pgvpn/mikrotik-sync.conf` (есть шаблон в репо). `PG_SSH_HOST` можно оставить пустым (локальный ipset). Впишите реальные `ROUTER_*` параметры и добавьте ключ: `ROUTER_home_SSH_OPTS="-i /etc/pgvpn/mikrotik-sync.key -o KexAlgorithms=+diffie-hellman-group14-sha1"` (аналогично для дачи).
 2. Обеспечьте авторизацию по ключу на MikroTik:
    ```bash
    ssh-keygen -t rsa -b 4096 -f ~/.ssh/mikrotik-sync
@@ -185,7 +185,7 @@ Always commit changes in Git before or after pushing, so the repository reflects
 ### MikroTik подготовка
 1. Включите SSH и импортируйте публичный ключ от pg (`/user/ssh-keys import`), чтобы синк работал без пароля.
 2. Убедитесь, что интерфейсы WireGuard к pg уже настроены (`wg-home`, `wg-dacha`).
-3. Первая синхронизация (можно запустить вручную с pg: `bash /app/pgvpn/scripts/sync-mikrotik-address-lists.sh`).
+3. Первая синхронизация: `systemctl start pg-sync-mikrotik.service` (или вручную `CONFIG_FILE=/etc/pgvpn/mikrotik-sync.conf bash /app/pgvpn/scripts/sync-mikrotik-address-lists.sh`).
 4. После импорта на MikroTik появятся:
    - address-lists `pg-proxy-nl` / `pg-proxy-usa`;
    - `mangle` правила `pg-sync nl/usa`, присваивающие `routing-mark=pg-to-pg`;

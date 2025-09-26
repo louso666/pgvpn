@@ -11,6 +11,7 @@ source "$CONFIG_FILE"
 
 PG_SSH_PORT=${PG_SSH_PORT:-22}
 PG_SSH_OPTS=${PG_SSH_OPTS:-}
+SSH_BASE_OPTS="-o BatchMode=yes -o ConnectTimeout=10"
 
 require_cmd() {
   for cmd in "$@"; do
@@ -21,16 +22,32 @@ require_cmd() {
   done
 }
 
-require_cmd ssh scp mktemp awk date
+require_cmd ssh scp mktemp awk date ipset hostname
+
+is_local_host() {
+  local host="$1"
+  [[ -z "$host" ]] && return 0
+  case "$host" in
+    localhost|127.0.0.1) return 0 ;;
+  esac
+  local short="$(hostname)"
+  local fqdn="$(hostname -f 2>/dev/null || echo "$short")"
+  [[ "$host" == "$short" || "$host" == "$fqdn" ]] && return 0
+  return 1
+}
 
 fetch_ipset() {
   local set_name="$1"
-  ssh $PG_SSH_OPTS -p "$PG_SSH_PORT" "${PG_SSH_USER}@${PG_SSH_HOST}" \
-    "ipset save $set_name" | awk '/^add/{print $3}'
+  if is_local_host "${PG_SSH_HOST:-}"; then
+    ipset save "$set_name" | awk '/^add/{print $3}'
+  else
+    ssh $SSH_BASE_OPTS $PG_SSH_OPTS -p "$PG_SSH_PORT" "${PG_SSH_USER}@${PG_SSH_HOST}" \
+      "ipset save $set_name" | awk '/^add/{print $3}'
+  fi
 }
 
 generate_rsc() {
-  local router_id="$1" tmp_file="$2"
+  local router_id="$1" tmp_file="$2" nl_file="$3" usa_file="$4"
   local list_nl="${MIKROTIK_LIST_NL:-pg-proxy-nl}"
   local list_usa="${MIKROTIK_LIST_USA:-pg-proxy-usa}"
   local comment_nl="${MIKROTIK_COMMENT_NL:-pg-sync nl}"
@@ -39,10 +56,10 @@ generate_rsc() {
   local routing_mark_var="ROUTER_${router_id}_ROUTING_MARK"
   local gateway_var="ROUTER_${router_id}_GATEWAY"
 
-  local routing_mark="${!routing_mark_var}"
-  local gateway="${!gateway_var}"
+  local routing_mark="${!routing_mark_var:-}"
+  local gateway="${!gateway_var:-}"
 
-  if [[ -z "$routing_mark" || -z "$gateway" ]]; then
+  if [[ -z "${routing_mark:-}" || -z "${gateway:-}" ]]; then
     echo "Routing mark or gateway not defined for router $router_id" >&2
     return 1
   fi
@@ -55,12 +72,12 @@ generate_rsc() {
     while IFS= read -r ip; do
       [[ -z "$ip" ]] && continue
       printf "/ip firewall address-list add list=\"%s\" address=%s disabled=no comment=\"%s\"\n" "$list_nl" "$ip" "$comment_nl"
-    done < <(fetch_ipset nl_proxy)
+    done <"$nl_file"
 
     while IFS= read -r ip; do
       [[ -z "$ip" ]] && continue
       printf "/ip firewall address-list add list=\"%s\" address=%s disabled=no comment=\"%s\"\n" "$list_usa" "$ip" "$comment_usa"
-    done < <(fetch_ipset usa_proxy)
+    done <"$usa_file"
 
     printf "/ip firewall mangle remove [find comment=\"%s\"]\n" "$comment_nl"
     printf "/ip firewall mangle remove [find comment=\"%s\"]\n" "$comment_usa"
@@ -71,6 +88,13 @@ generate_rsc() {
     printf "/ip route add dst-address=0.0.0.0/0 gateway=%s routing-mark=\"%s\" distance=1 check-gateway=ping comment=\"%s\"\n" "$gateway" "$routing_mark" "$route_comment"
   } >"$tmp_file"
 }
+
+NL_TMP=$(mktemp)
+USA_TMP=$(mktemp)
+trap 'rm -f "$NL_TMP" "$USA_TMP"' EXIT
+
+fetch_ipset nl_proxy >"$NL_TMP"
+fetch_ipset usa_proxy >"$USA_TMP"
 
 for router_id in "${MIKROTIK_ROUTERS[@]}"; do
   host_var="ROUTER_${router_id}_HOST"
@@ -85,17 +109,27 @@ for router_id in "${MIKROTIK_ROUTERS[@]}"; do
 
   if [[ -z "$host" || -z "$user" ]]; then
     echo "Router $router_id is missing host or user in config" >&2
-    exit 1
+    continue
   fi
 
   tmp_rsc=$(mktemp)
-  generate_rsc "$router_id" "$tmp_rsc"
+  if ! generate_rsc "$router_id" "$tmp_rsc" "$NL_TMP" "$USA_TMP"; then
+    rm -f "$tmp_rsc"
+    continue
+  fi
 
   remote_name="pg-sync.rsc"
   echo "[${router_id}] uploading address list (${tmp_rsc})"
-  scp $sshopts -P "$port" "$tmp_rsc" "${user}@${host}:$remote_name"
+  if ! scp $SSH_BASE_OPTS $sshopts -P "$port" "$tmp_rsc" "${user}@${host}:$remote_name"; then
+    echo "[${router_id}] scp failed" >&2
+    rm -f "$tmp_rsc"
+    continue
+  fi
   echo "[${router_id}] importing $remote_name"
-  ssh $sshopts -p "$port" "${user}@${host}" "/import file-name=$remote_name" >/dev/null
-  echo "[${router_id}] done"
+  if ! ssh $SSH_BASE_OPTS $sshopts -p "$port" "${user}@${host}" "/import file-name=$remote_name" >/dev/null; then
+    echo "[${router_id}] import failed" >&2
+  else
+    echo "[${router_id}] done"
+  fi
   rm -f "$tmp_rsc"
 done
