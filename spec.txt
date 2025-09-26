@@ -100,7 +100,8 @@ push-configs.sh — rsync обратно на серверы + iptables-restore 
    • wg-quick@wg{200,ipsec,usa}.service – автоподъём туннелей
    • proxy-route.service – оформляет таблицы 201/202 и fwmark
    • wg-monitor.timer → wg-monitor.service → /usr/local/bin/wg-monitor.sh (рестарт и Telegram оповещения)
-   • pgvpn.target – umbrella для всего стека
+   • pg-sync-mikrotik.timer → pg-sync-mikrotik.service → /usr/local/bin/pg-sync-mikrotik.sh (экспорт ipset на MikroTik)
+   • pgvpn.target – umbrella для всего стека (включает таймеры и сервисы выше)
    • dnsproxy.service (Restart=always) – следит за ipset и ботом
 
 5. Процесс деплоя

@@ -162,20 +162,35 @@ Always commit changes in Git before or after pushing, so the repository reflects
 
 ## 9. MikroTik Address List Sync
 
-Домашний и дачный MikroTik должны отправлять только те IP, которые бот относит к NL/USA, через туннели `wg-home`/`wg-dacha`. Для этого используем `ip firewall address-list` + `mangle` → `mark-routing`.
+Домашний и дачный MikroTik должны отправлять только те IP, которые бот относит к NL/USA, через туннели `wg-home`/`wg-dacha`. Для этого используем `ip firewall address-list` + `mangle` → `mark-routing`. Выгрузкой ipset занимается таймер на `pg.louso.ru`.
 
-### Настройка
-1. Отредактируйте `scripts/mikrotik-sync.conf` — пропишите SSH-доступы к MikroTik (логин, адрес, порт), IP шлюза WireGuard на стороне pg (`10.10.3.1` для дома, `10.20.2.1` для дачи) и имя routing-mark (по умолчанию `pg-to-pg`).
-2. Убедитесь, что на MikroTik разрешён `ssh/scp` и настроена аутентификация (ключи или пароль).
-3. Запустите:
+### Сервер (pg.louso.ru)
+1. Проверьте конфиг `/etc/pgvpn/mikrotik-sync.conf` (есть шаблон в репо). Впишите реальные `ROUTER_*` параметры и при необходимости ключи алгоритмов.
+2. Обеспечьте авторизацию по ключу на MikroTik:
    ```bash
-   bash scripts/sync-mikrotik-address-lists.sh
+   ssh-keygen -t rsa -b 4096 -f ~/.ssh/mikrotik-sync
+   /user/ssh-keys import user=admin public-key-file=mikrotik-sync.pub  # на MikroTik
    ```
-   Скрипт выполнит:
-   - чтение ipset `nl_proxy`/`usa_proxy` с pg;
-   - загрузку списков на MikroTik (`pg-proxy-nl`, `pg-proxy-usa`);
-   - пересоздание mangle-правил для mark-routing (комментарии `pg-sync nl` / `pg-sync usa`);
-   - замену маршрута `0.0.0.0/0 routing-mark=pg-to-pg` → gateway (pg) с комментарием `pg-sync to-pg`.
+   И пропишите `ROUTER_*_SSH_OPTS="-i ~/.ssh/mikrotik-sync"` в конфиге.
+3. Убедитесь, что на pg есть `/usr/local/bin/pg-sync-mikrotik.sh` (обёртка на `scripts/sync-mikrotik-address-lists.sh`).
+4. Включите сервис:
+   ```bash
+   systemctl daemon-reload
+   systemctl enable --now pg-sync-mikrotik.timer
+   systemctl start pg-sync-mikrotik.service   # первая синхронизация
+   systemctl status pg-sync-mikrotik.service
+   ```
+   Таймер запускается каждые 10 минут; лог смотрим через `journalctl -u pg-sync-mikrotik.service`.
+
+### MikroTik подготовка
+1. Включите SSH и импортируйте публичный ключ от pg (`/user/ssh-keys import`), чтобы синк работал без пароля.
+2. Убедитесь, что интерфейсы WireGuard к pg уже настроены (`wg-home`, `wg-dacha`).
+3. Первая синхронизация (можно запустить вручную с pg: `bash /app/pgvpn/scripts/sync-mikrotik-address-lists.sh`).
+4. После импорта на MikroTik появятся:
+   - address-lists `pg-proxy-nl` / `pg-proxy-usa`;
+   - `mangle` правила `pg-sync nl/usa`, присваивающие `routing-mark=pg-to-pg`;
+   - маршрут `0.0.0.0/0 routing-mark=pg-to-pg` через адрес pg.
+   Для корректной работы убедитесь, что общий default маршрут (без mark) остается через обычный шлюз провайдера.
 
 После запуска только адреса из списков получат routing-mark `pg-to-pg` и будут идти по туннелю к pg, где дальше сработает политика NL/USA.
 
@@ -188,7 +203,7 @@ Always commit changes in Git before or after pushing, so the repository reflects
 
 В логах mark-routing можно увидеть счётчики трафика. Основной default маршрут (через ISP) остаётся нетронутым.
 
-Запланируйте периодический запуск (например, cron/Task Scheduler) для синхронизации списков.
+Если таймер не используется, скрипт можно запускать вручную или через `cron`. В текущем деплое задание уже висит на `systemd`.
 
 ---
 

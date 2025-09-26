@@ -1,0 +1,11 @@
+[Unit]
+Description=Periodic MikroTik address-list synchronization
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=10min
+Unit=pg-sync-mikrotik.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

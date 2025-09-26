@@ -1,0 +1,12 @@
+[Unit]
+Description=Synchronize MikroTik address-lists from pg ipset
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+Environment=CONFIG_FILE=/etc/pgvpn/mikrotik-sync.conf
+ExecStart=/usr/local/bin/pg-sync-mikrotik.sh
+
+[Install]
+WantedBy=multi-user.target

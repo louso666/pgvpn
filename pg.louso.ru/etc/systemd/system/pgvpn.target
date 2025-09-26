@@ -2,7 +2,7 @@
 Description=pg.louso consolidated VPN stack
 Requires=network-online.target
 After=network-online.target
-Wants=wg-quick@wg200.service wg-quick@wg-ipsec.service wg-quick@wg-usa.service proxy-route.service dnsproxy.service wg-monitor.timer
+Wants=wg-quick@wg200.service wg-quick@wg-ipsec.service wg-quick@wg-usa.service proxy-route.service dnsproxy.service wg-monitor.timer pg-sync-mikrotik.timer
 
 [Install]
 WantedBy=multi-user.target
