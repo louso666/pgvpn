@@ -1,8 +1,0 @@
-[Unit]
-Description=Ping keepalive for GRE pg↔pg2
-After=gre-pg2.service
-Requires=gre-pg2.service
-
-[Service]
-Type=oneshot
-ExecStart=/bin/ping -c1 -W1 -I gre-pg2 10.26.0.2 

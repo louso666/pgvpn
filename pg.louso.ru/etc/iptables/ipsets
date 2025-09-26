@@ -1,1 +1,2 @@
-create proxied hash:ip family inet hashsize 1024 maxelem 65536 bucketsize 12 initval 0x241033f8
+create nl_proxy  hash:ip family inet hashsize 4096 maxelem 131072
+create usa_proxy hash:ip family inet hashsize 4096 maxelem 131072

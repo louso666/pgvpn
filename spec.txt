@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 📄 Схема туннелей и сервисов (сентябрь 2025)
 1. Участники инфраструктуры
 
@@ -64,3 +65,54 @@ pull-configs.sh — rsync конфиги с серверов (исключая �
 правки и контроль в git
 
 push-configs.sh — rsync обратно на серверы + iptables-restore и рестарт юнитов
+=======
+📄 Схема туннелей и статических конфигураций (сентябрь 2025)
+
+1. Узлы
+   ├─ pg.louso.ru  (центральный маршрутизатор+DNS)
+   │    • WireGuard: wg200 (клиенты), wg-ipsec (линк в NL), wg-usa (линк в USA)
+   │    • dnsproxy 10.200.0.1:53 + Telegram-бот управляют ipset и wg клиентами
+   │    • Политика: fwmark 0x1 (NL), 0x2 (USA) → отдельные таблицы маршрутизации
+   │    • NAT: 10.200.0.0/24 → eth0, а также SNAT на wg-ipsec/wg-usa
+   ├─ ipsec.louso.ru (VPS NL)
+   │    • WireGuard wg-pg ⇄ pg.louso.ru, обслуживает NL egress + VLESS
+   └─ usa.louso.ru   (VPS USA)
+        • WireGuard wg-pg ⇄ pg.louso.ru, обслуживает US egress + VLESS
+
+   Домашний Mikrotik (192.168.1.0/24) и дачный (192.168.2.0/24) входят через wg200.
+
+2. Динамические файлы (ИСКЛЮЧАЕМ из синхронизации)
+   • /root/site_nl, /root/site_usa – паттерны, пишет бот
+   • /root/map.json             – история DNS→IP, пишет dnsproxy
+   • /etc/wireguard/clients/*   – клиентские конфиги wg200
+   • /etc/wireguard/user_index.txt – счётчик IP, ведёт /root/wg
+   • /etc/ipset.conf            – выгрузка ipset save
+   • /root/bot.db               – SQLite база бота/dnsproxy
+
+3. Статические файлы (СИНХРОНИЗИРУЕМ)
+   • /etc/iptables/rules.v4, ipsets — политика NL/USA + NAT
+   • /etc/systemd/system: wg-quick@*.service (через unit drop-in), proxy-route.service, wg-monitor.*,
+     pgvpn.target, dnsproxy.service
+   • /usr/local/bin/wg-monitor.sh, /root/wg (ботовый генератор клиентов)
+   • WireGuard линковые конфиги: wg200.conf, wg-ipsec.conf, wg-usa.conf, зеркальные на удалённых VPS
+
+4. Watchdog'и / автоподъём
+   • wg-quick@wg{200,ipsec,usa}.service – автоподъём туннелей
+   • proxy-route.service – оформляет таблицы 201/202 и fwmark
+   • wg-monitor.timer → wg-monitor.service → /usr/local/bin/wg-monitor.sh (рестарт и Telegram оповещения)
+   • pgvpn.target – umbrella для всего стека
+   • dnsproxy.service (Restart=always) – следит за ipset и ботом
+
+5. Процесс деплоя
+   1) `scripts/pull-configs.sh <host>` – снимок /etc и /root (без динамики)
+   2) Правки в Git
+   3) `scripts/push-configs.sh <host>` – выкладка (без --delete) + `systemctl daemon-reload`
+   4) Дополнительно: `dnsproxy/deploy.sh` пересобирает бинарь и включает unit
+
+6. Расположение скриптов в репозитории
+   • scripts/pull-configs.sh    – rsync → локально; режет *.backup/*.applied и пр.
+   • scripts/push-configs.sh    – rsync ← на сервер; общая синхронизация конфигов
+   • scripts/servers.conf       – список узлов/портов
+   • pg.louso.ru/root/wg        – генератор клиентских конфигов (бот дергает `/wg <имя>`)
+   • pg.louso.ru/usr/local/bin/wg-monitor.sh – монитор NL/USA линков
+>>>>>>> f9eaca5 (pg.louso: replace GRE path with WG policy stack)

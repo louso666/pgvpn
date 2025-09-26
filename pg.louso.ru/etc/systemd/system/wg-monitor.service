@@ -1,0 +1,12 @@
+[Unit]
+Description=WireGuard link monitor
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/etc/wg-monitor.env
+ExecStart=/usr/local/bin/wg-monitor.sh
+
+[Install]
+WantedBy=multi-user.target

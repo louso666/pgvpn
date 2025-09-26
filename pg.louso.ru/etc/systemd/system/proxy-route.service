@@ -1,17 +1,23 @@
 [Unit]
-Description=policy-route for ipset proxied traffic
-After=gre-p2p.service netfilter-persistent.service
-Requires=gre-p2p.service
+Description=Policy routing for NL/USA proxied traffic
+After=wg-quick@wg-ipsec.service wg-quick@wg-usa.service netfilter-persistent.service
+Wants=wg-quick@wg-ipsec.service wg-quick@wg-usa.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-
-# таблица и правило идемпотентно
-ExecStart=/usr/bin/bash -c '\
-grep -q "^200[[:space:]]\+proxy" /etc/iproute2/rt_tables || echo "200 proxy" >> /etc/iproute2/rt_tables; \
-ip rule add fwmark 0x42 table proxy 2>/dev/null || true; \
-ip route add default via 10.24.0.2 dev gre-p2p table proxy 2>/dev/null || true \
+ExecStart=/usr/bin/bash -c '
+  set -e
+  grep -q "^201[[:space:]]\+nl$" /etc/iproute2/rt_tables || echo "201 nl" >> /etc/iproute2/rt_tables
+  grep -q "^202[[:space:]]\+usa$" /etc/iproute2/rt_tables || echo "202 usa" >> /etc/iproute2/rt_tables
+  ip rule add fwmark 0x1 table nl 2>/dev/null || true
+  ip rule add fwmark 0x2 table usa 2>/dev/null || true
+  ip route replace default dev wg-ipsec table nl
+  ip route replace default dev wg-usa table usa
+'
+ExecStop=/usr/bin/bash -c '
+  ip rule del fwmark 0x1 table nl 2>/dev/null || true
+  ip rule del fwmark 0x2 table usa 2>/dev/null || true
 '
 
 [Install]

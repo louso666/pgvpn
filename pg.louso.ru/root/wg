@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # Проверяем аргументы
 if [ $# -ne 1 ]; then
@@ -11,6 +11,7 @@ fi
 USERNAME=$1
 WG_DIR=/etc/wireguard
 INDEX_FILE=$WG_DIR/user_index.txt
+# директория, где складируем клиентские конфиги
 CLIENT_DIR=$WG_DIR/clients
 SERVER_CONFIG=$WG_DIR/wg200.conf
 SERVER_PUBLIC_KEY=$(cat $WG_DIR/server_public.key)
@@ -19,6 +20,10 @@ SERVER_PUBLIC_KEY=$(cat $WG_DIR/server_public.key)
 if [ -f "$CLIENT_DIR/$USERNAME.conf" ]; then
     exit 1
 fi
+
+# Готовим инфраструктуру для клиента
+mkdir -p "$CLIENT_DIR"
+[ -f "$INDEX_FILE" ] || echo 20 > "$INDEX_FILE"
 
 # Читаем текущий индекс и увеличиваем его
 USER_INDEX=$(cat $INDEX_FILE)
@@ -51,11 +56,11 @@ ListenPort = 16200
 DNS = 10.200.0.1
 #PreUp = nping --udp --count 16 --data-length 16 --source-port 16200 --dest-port 16200 --delay 100ms 176.114.88.142
 
-# pg.gena.host
+# pg.louso.ru
 [Peer]
 PublicKey = $SERVER_PUBLIC_KEY
 PresharedKey = $PRESHARED_KEY
-Endpoint = 176.114.88.142:16200
+Endpoint = pg.louso.ru:16200
 AllowedIPs = 0.0.0.0/0
 PersistentKeepalive = 5
 EOL

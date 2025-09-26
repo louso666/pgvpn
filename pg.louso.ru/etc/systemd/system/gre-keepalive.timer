@@ -1,9 +1,0 @@
-[Unit]
-Description=Ping GRE peer every 30 s
-
-[Timer]
-OnBootSec=0
-OnUnitActiveSec=30
-
-[Install]
-WantedBy=timers.target

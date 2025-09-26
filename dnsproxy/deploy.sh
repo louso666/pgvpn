@@ -40,11 +40,12 @@ echo "🔄 Атомарная замена и рестарт..."
 ssh ${SSH_OPTS} "${REMOTE}" "set -e;
   mv '${REMOTE_BIN_DIR}/${BIN}.new' '${REMOTE_BIN_DIR}/${BIN}';
   systemctl daemon-reload;
-  systemctl restart '${SERVICE}';
+  systemctl enable --now '${SERVICE}';
 "
 
 echo "🔧 Проверяю ipset..."
-ssh ${SSH_OPTS} "${REMOTE}" "ipset list proxied >/dev/null 2>&1 || ipset create proxied hash:ip"
+ssh ${SSH_OPTS} "${REMOTE}" "ipset list nl_proxy >/dev/null 2>&1 || ipset create nl_proxy hash:ip"
+ssh ${SSH_OPTS} "${REMOTE}" "ipset list usa_proxy >/dev/null 2>&1 || ipset create usa_proxy hash:ip"
 
 echo "📊 Статус сервиса:"
 ssh ${SSH_OPTS} "${REMOTE}" "systemctl --no-pager status '${SERVICE}' | sed -n '1,50p'"

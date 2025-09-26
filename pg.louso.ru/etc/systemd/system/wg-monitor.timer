@@ -1,0 +1,11 @@
+[Unit]
+Description=Periodic WireGuard link monitor
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Unit=wg-monitor.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target
