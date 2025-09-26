@@ -160,6 +160,38 @@ Always commit changes in Git before or after pushing, so the repository reflects
 
 ---
 
+## 9. MikroTik Address List Sync
+
+Домашний и дачный MikroTik должны отправлять только те IP, которые бот относит к NL/USA, через туннели `wg-home`/`wg-dacha`. Для этого используем `ip firewall address-list` + `mangle` → `mark-routing`.
+
+### Настройка
+1. Отредактируйте `scripts/mikrotik-sync.conf` — пропишите SSH-доступы к MikroTik (логин, адрес, порт), IP шлюза WireGuard на стороне pg (`10.10.3.1` для дома, `10.20.2.1` для дачи) и имя routing-mark (по умолчанию `pg-to-pg`).
+2. Убедитесь, что на MikroTik разрешён `ssh/scp` и настроена аутентификация (ключи или пароль).
+3. Запустите:
+   ```bash
+   bash scripts/sync-mikrotik-address-lists.sh
+   ```
+   Скрипт выполнит:
+   - чтение ipset `nl_proxy`/`usa_proxy` с pg;
+   - загрузку списков на MikroTik (`pg-proxy-nl`, `pg-proxy-usa`);
+   - пересоздание mangle-правил для mark-routing (комментарии `pg-sync nl` / `pg-sync usa`);
+   - замену маршрута `0.0.0.0/0 routing-mark=pg-to-pg` → gateway (pg) с комментарием `pg-sync to-pg`.
+
+После запуска только адреса из списков получат routing-mark `pg-to-pg` и будут идти по туннелю к pg, где дальше сработает политика NL/USA.
+
+### Проверка на MikroTik
+```
+/ip firewall address-list print where list~"pg-proxy"
+/ip firewall mangle print where comment~"pg-sync"
+/ip route print where comment="pg-sync to-pg"
+```
+
+В логах mark-routing можно увидеть счётчики трафика. Основной default маршрут (через ISP) остаётся нетронутым.
+
+Запланируйте периодический запуск (например, cron/Task Scheduler) для синхронизации списков.
+
+---
+
 ## 9. Troubleshooting
 
 1. **Pattern added but traffic still goes via pg (eth0)**
